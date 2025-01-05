@@ -16,7 +16,8 @@ jobs:
       - name: Get task ID from branch name
         id: get_task_id
         run: |
-          TASK_ID=$(echo "${GITHUB_REF##*/}" | awk -F'-' '{print $2}')
+          echo "Branch name: $GITHUB_REF"
+          TASK_ID=$(echo "${GITHUB_REF##*/}" | sed -E 's/^[^\-]+\-([^-]+).*/\1/')
           echo "Extracted Task ID: $TASK_ID"
           echo "TASK_ID=$TASK_ID" >> $GITHUB_ENV
 
