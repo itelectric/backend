@@ -1,5 +1,6 @@
 package com.itelectric.backend.domain.entity;
 
+import com.itelectric.backend.domain.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,4 +40,8 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserType type;
 }
