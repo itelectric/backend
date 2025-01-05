@@ -1,5 +1,3 @@
-# Processos para Contribuição no Projeto
-
 Este documento detalha os passos e regras para contribuições no projeto, garantindo organização e qualidade no desenvolvimento.
 
 ## 1. Tarefas no ClickUp
@@ -16,12 +14,12 @@ Este documento detalha os passos e regras para contribuições no projeto, garan
 ### 2.1. Nomenclatura de Branches
 
 * Toda branch criada para resolver ou adicionar uma nova funcionalidade deve incluir no início de seu nome o identificador do projeto, seguido do identificador da tarefa no ClickUp.
-    * Padrão: `itelectric-iddatarefa`
+  * Padrão: `itelectric-iddatarefa`
 
 ### 2.2. Fluxo de Trabalho
 
 1. Crie uma branch a partir de `main`, seguindo o padrão de nomenclatura acima:
-    * `itelectric-iddatarefa`
+   * `itelectric-iddatarefa`
 2. Desenvolva e teste as alterações na sua branch.
 3. Submeta um \*\*Pull Request\*\* (PR) da sua branch para a branch `develop`.
 4. A branch `develop` é onde as alterações são testadas e aprovadas.
@@ -30,13 +28,13 @@ Este documento detalha os passos e regras para contribuições no projeto, garan
 
 * Cada commit deve seguir o seguinte padrão: `<span>tipo: mensagem</span>`
 * **Tipos permitidos:**
-    * `docs`: Para alterações relacionadas à documentação.
-    * `fix`: Para correção de bugs.
-    * `feat`: Para adição de uma nova funcionalidade.
-    * `ci/cd`: Para alterações no pipeline de integração/entrega contínua.
-    * `config`: Para alterações de configuracçoes da aplicação.
-    * `refactor`: Para refatoração..
-  
+  * `docs`: Para alterações relacionadas à documentação.
+  * `fix`: Para correção de bugs.
+  * `feat`: Para adição de uma nova funcionalidade.
+  * `ci/cd`: Para alterações no pipeline de integração/entrega contínua.
+  * `config`: Para alterações de configuracçoes da aplicação.
+  * `refactor`: Para refatoração..
+
 ### 3.1. Exemplo de Commit:
 
 * `feat: adiciona endpoint para criação de usuários`
