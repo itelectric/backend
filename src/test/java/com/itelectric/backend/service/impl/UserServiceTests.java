@@ -3,8 +3,8 @@ package com.itelectric.backend.service.impl;
 import com.itelectric.backend.domain.entity.Address;
 import com.itelectric.backend.domain.entity.Contact;
 import com.itelectric.backend.domain.entity.User;
-import com.itelectric.backend.domain.enums.UserType;
 import com.itelectric.backend.domain.exception.ConflictException;
+import com.itelectric.backend.mocks.UserMocksFactory;
 import com.itelectric.backend.repository.UserRepository;
 import com.itelectric.backend.service.contract.IUserService;
 import org.assertj.core.api.Assertions;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @SpringBootTest
 public class UserServiceTests {
@@ -28,38 +27,11 @@ public class UserServiceTests {
     @Test
     @DisplayName("Should throw ConflictException if nuit is already in use on create user")
     void shouldThrowConflictExceptionIfNuitIsAlreadyInUseOnCreateUser() {
-        Contact contact = Contact
-                .builder()
-                .id(UUID.randomUUID())
-                .phone("any_phone")
-                .email("any_email")
-                .build();
+        Contact contact = UserMocksFactory.contactWithIdFactory();
+        Address address = UserMocksFactory.addressWithIdFactory();
+        User user = UserMocksFactory.userWithIdFactory(contact,address);
 
-        Address address = Address
-                .builder()
-                .street("any_street")
-                .number("any_number")
-                .city("any_city")
-                .province("any_province")
-                .country("country")
-                .build();
-
-        User user = User
-                .builder()
-                .id(UUID.randomUUID())
-                .name("any_name")
-                .nuit(UUID.randomUUID().toString())
-                .contact(contact)
-                .address(address)
-                .username("any_username")
-                .password("any_password")
-                .type(UserType.CLIENT)
-                .build();
-
-        User savedUser = user;
-        savedUser.setName("Any_name");
-
-        Mockito.when(this.repository.findByNuit(user.getNuit())).thenReturn(Optional.of(savedUser));
+        Mockito.when(this.repository.findByNuit(user.getNuit())).thenReturn(Optional.of(user));
 
         Throwable exception = Assertions.catchThrowable(() -> this.service.create(user));
 
