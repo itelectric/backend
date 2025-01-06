@@ -25,7 +25,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nuit;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
