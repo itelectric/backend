@@ -5,7 +5,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      -  itelectric-dbdata:/data/db
+      - itelectric-dbdata:/data/db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -15,7 +15,7 @@ services:
 
   itelectric-backend:
     build:
-     context: .
+      context: .
     container_name: itelectric-backend
     ports:
       - "8080:8080"
