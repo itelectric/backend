@@ -48,6 +48,7 @@ public class UserServiceTests {
         Address address = UserMocksFactory.addressWithIdFactory();
         User user = UserMocksFactory.userWithIdFactory(contact,address);
 
+        Mockito.when(this.repository.findByNuit(user.getUsername())).thenReturn(Optional.empty());
         Mockito.when(this.repository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         Throwable exception = Assertions.catchThrowable(() -> this.service.create(user));
