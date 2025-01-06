@@ -21,5 +21,10 @@ public class UserService implements IUserService {
         Optional<User> savedUser = this.repository.findByNuit(user.getNuit());
         if (savedUser.isPresent())
             throw new ConflictException("We've found an account with this NUIT, please try to login.");
+
+        savedUser = this.repository.findByUsername(user.getUsername());
+        if (savedUser.isPresent())
+            throw new ConflictException("Username already taken.");
+
     }
 }
