@@ -39,4 +39,21 @@ public class UserServiceTests {
         Assertions.assertThat(exception.getMessage()).isEqualTo("We've found an account with this NUIT, please try to login.");
         Mockito.verify(repository, Mockito.times(1)).findByNuit(user.getNuit());
     }
+
+
+    @Test
+    @DisplayName("Should throw ConflictException if username is already in use on create user")
+    void shouldThrowConflictExceptionIfUsernameIsAlreadyInUseOnCreateUser() {
+        Contact contact = UserMocksFactory.contactWithIdFactory();
+        Address address = UserMocksFactory.addressWithIdFactory();
+        User user = UserMocksFactory.userWithIdFactory(contact,address);
+
+        Mockito.when(this.repository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+
+        Throwable exception = Assertions.catchThrowable(() -> this.service.create(user));
+
+        Assertions.assertThat(exception).isInstanceOf(ConflictException.class);
+        Assertions.assertThat(exception.getMessage()).isEqualTo("Username already taken.");
+        Mockito.verify(repository, Mockito.times(1)).findByNuit(user.getNuit());
+    }
 }
