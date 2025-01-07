@@ -24,7 +24,7 @@ public class CustomerService extends GenericUserService {
 
     @Override
     public void create(User user) throws ConflictException {
-        user.setType(UserType.CLIENT);
+        user.setType(UserType.CUSTOMER);
         super.create(user);
     }
 }
