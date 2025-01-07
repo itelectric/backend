@@ -8,6 +8,6 @@ public class AuditingService implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        return Optional.of("Gervásio Artur DOmbo");
+        return Optional.of("Gervásio Artur Dombo");
     }
 }
