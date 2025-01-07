@@ -29,7 +29,7 @@ public class UserMocksFactory {
     }
 
     public static User userWithIdFactory(Contact contact, Address address) {
-       return User
+        return User
                 .builder()
                 .id(UUID.randomUUID())
                 .name("any_name")

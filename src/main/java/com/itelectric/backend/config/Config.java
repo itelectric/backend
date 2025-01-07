@@ -15,7 +15,7 @@ public class Config {
     }
 
     @Bean
-    public AuditorAware<String> auditorProvider(){
+    public AuditorAware<String> auditorProvider() {
         return new AuditingService();
     }
 }

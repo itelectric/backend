@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class CustomerService extends GenericUserService {
     @Autowired
-    private  UserRepository repository;
+    private UserRepository repository;
     @Autowired
-    private  PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     public CustomerService(UserRepository repository, PasswordEncoder encoder) {
         super(repository, encoder);

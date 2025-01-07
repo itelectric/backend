@@ -6,7 +6,6 @@ import com.itelectric.backend.domain.entity.User;
 import com.itelectric.backend.domain.exception.ConflictException;
 import com.itelectric.backend.mocks.UserMocksFactory;
 import com.itelectric.backend.repository.UserRepository;
-import com.itelectric.backend.service.contract.IUserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,9 +19,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
-public class UserServiceTests {
+public class CustomerServiceTests {
     @Autowired
-    private IUserService service;
+    private CustomerService service;
     @MockitoBean
     private UserRepository repository;
     @MockitoBean
@@ -33,7 +32,7 @@ public class UserServiceTests {
     void shouldThrowConflictExceptionIfNuitIsAlreadyInUseOnCreateUser() {
         Contact contact = UserMocksFactory.contactWithIdFactory();
         Address address = UserMocksFactory.addressWithIdFactory();
-        User user = UserMocksFactory.userWithIdFactory(contact,address);
+        User user = UserMocksFactory.userWithIdFactory(contact, address);
 
         Mockito.when(this.repository.findByNuit(user.getNuit())).thenReturn(Optional.of(user));
 
@@ -50,7 +49,7 @@ public class UserServiceTests {
     void shouldThrowConflictExceptionIfUsernameIsAlreadyInUseOnCreateUser() {
         Contact contact = UserMocksFactory.contactWithIdFactory();
         Address address = UserMocksFactory.addressWithIdFactory();
-        User user = UserMocksFactory.userWithIdFactory(contact,address);
+        User user = UserMocksFactory.userWithIdFactory(contact, address);
 
         Mockito.when(this.repository.findByNuit(user.getUsername())).thenReturn(Optional.empty());
         Mockito.when(this.repository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
@@ -69,7 +68,7 @@ public class UserServiceTests {
         Contact contact = UserMocksFactory.contactWithIdFactory();
         Address address = UserMocksFactory.addressWithIdFactory();
         User user = UserMocksFactory.userWithIdFactory(contact, address);
-        String password =  user.getPassword();
+        String password = user.getPassword();
         String encodedPassword = UUID.randomUUID().toString();
 
         Mockito.when(this.repository.findByNuit(user.getUsername())).thenReturn(Optional.empty());
