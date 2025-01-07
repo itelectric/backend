@@ -41,4 +41,18 @@ public class UserMocksFactory {
                 .type(UserType.CUSTOMER)
                 .build();
     }
+
+    public static User companyWithIdFactory(Contact contact, Address address) {
+        return User
+                .builder()
+                .id(UUID.randomUUID())
+                .name("any_name")
+                .nuit(UUID.randomUUID().toString())
+                .contact(contact)
+                .address(address)
+                .username("any_username")
+                .password("any_password")
+                .type(UserType.COMPANY)
+                .build();
+    }
 }
