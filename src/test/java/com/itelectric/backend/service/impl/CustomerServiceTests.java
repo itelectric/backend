@@ -28,11 +28,11 @@ public class CustomerServiceTests {
     private PasswordEncoder encoder;
 
     @Test
-    @DisplayName("Should throw ConflictException if nuit is already in use on create user")
-    void shouldThrowConflictExceptionIfNuitIsAlreadyInUseOnCreateUser() {
+    @DisplayName("Should throw ConflictException if nuit is already in use on create customer")
+    void shouldThrowConflictExceptionIfNuitIsAlreadyInUseOnCreateCustomer() {
         Contact contact = UserMocksFactory.contactWithIdFactory();
         Address address = UserMocksFactory.addressWithIdFactory();
-        User user = UserMocksFactory.userWithIdFactory(contact, address);
+        User user = UserMocksFactory.customerWithIdFactory(contact, address);
 
         Mockito.when(this.repository.findByNuit(user.getNuit())).thenReturn(Optional.of(user));
 
@@ -45,11 +45,11 @@ public class CustomerServiceTests {
 
 
     @Test
-    @DisplayName("Should throw ConflictException if username is already in use on create user")
-    void shouldThrowConflictExceptionIfUsernameIsAlreadyInUseOnCreateUser() {
+    @DisplayName("Should throw ConflictException if username is already in use on create customer")
+    void shouldThrowConflictExceptionIfUsernameIsAlreadyInUseOnCreateCustomer() {
         Contact contact = UserMocksFactory.contactWithIdFactory();
         Address address = UserMocksFactory.addressWithIdFactory();
-        User user = UserMocksFactory.userWithIdFactory(contact, address);
+        User user = UserMocksFactory.customerWithIdFactory(contact, address);
 
         Mockito.when(this.repository.findByNuit(user.getUsername())).thenReturn(Optional.empty());
         Mockito.when(this.repository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
@@ -63,11 +63,11 @@ public class CustomerServiceTests {
     }
 
     @Test
-    @DisplayName("Should save user info with encrypted password on create user")
-    void shouldSaveUserInfoWithEncryptedPasswordOnCreateUser() throws ConflictException {
+    @DisplayName("Should save user info with encrypted password on create customer")
+    void shouldSaveUserInfoWithEncryptedPasswordOnCreateCustomer() throws ConflictException {
         Contact contact = UserMocksFactory.contactWithIdFactory();
         Address address = UserMocksFactory.addressWithIdFactory();
-        User user = UserMocksFactory.userWithIdFactory(contact, address);
+        User user = UserMocksFactory.customerWithIdFactory(contact, address);
         String password = user.getPassword();
         String encodedPassword = UUID.randomUUID().toString();
 

@@ -28,7 +28,7 @@ public class UserMocksFactory {
                 .build();
     }
 
-    public static User userWithIdFactory(Contact contact, Address address) {
+    public static User customerWithIdFactory(Contact contact, Address address) {
         return User
                 .builder()
                 .id(UUID.randomUUID())
@@ -38,7 +38,7 @@ public class UserMocksFactory {
                 .address(address)
                 .username("any_username")
                 .password("any_password")
-                .type(UserType.CLIENT)
+                .type(UserType.CUSTOMER)
                 .build();
     }
 }
