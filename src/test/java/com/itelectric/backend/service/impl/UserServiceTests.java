@@ -64,23 +64,23 @@ public class UserServiceTests {
     }
 
     @Test
-    @DisplayName("Should encrypt password before save user info on create user")
-    void shouldEncryptPasswordBeforeSaveUserInfoOnCreateUser() {
+    @DisplayName("Should save user info with encrypted password on create user")
+    void shouldSaveUserInfoWithEncryptedPasswordOnCreateUser() throws ConflictException {
         Contact contact = UserMocksFactory.contactWithIdFactory();
         Address address = UserMocksFactory.addressWithIdFactory();
         User user = UserMocksFactory.userWithIdFactory(contact, address);
+        String password =  user.getPassword();
         String encodedPassword = UUID.randomUUID().toString();
 
         Mockito.when(this.repository.findByNuit(user.getUsername())).thenReturn(Optional.empty());
         Mockito.when(this.repository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
         Mockito.when(this.encoder.encode(user.getPassword())).thenReturn(encodedPassword);
 
-        Throwable exception = Assertions.catchThrowable(() -> this.service.create(user));
+        this.service.create(user);
 
-        Assertions.assertThat(exception).isInstanceOf(ConflictException.class);
-        Assertions.assertThat(exception.getMessage()).isEqualTo("Username already taken.");
         Mockito.verify(this.repository, Mockito.times(1)).findByNuit(user.getNuit());
         Mockito.verify(this.repository, Mockito.times(1)).findByUsername(user.getUsername());
-        Mockito.verify(this.encoder, Mockito.times(1)).encode(user.getPassword());
+        Mockito.verify(this.encoder, Mockito.times(1)).encode(password);
+        Mockito.verify(this.repository, Mockito.times(1)).save(user);
     }
 }
