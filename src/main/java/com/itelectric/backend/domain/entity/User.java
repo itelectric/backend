@@ -4,6 +4,7 @@ import com.itelectric.backend.domain.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -15,10 +16,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "t_users")
 public class User extends AbstractAuditingEntity implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(length = 32)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
@@ -44,4 +45,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserType type;
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 }
