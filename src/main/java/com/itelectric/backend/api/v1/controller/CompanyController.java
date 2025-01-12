@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "Customer")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/company")
+@RequestMapping("/api/v1/companies")
 public class CompanyController {
     private final CompanyService service;
     private final ModelMapper mapper;
