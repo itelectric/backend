@@ -6,20 +6,15 @@ import com.itelectric.backend.domain.exception.ConflictException;
 import com.itelectric.backend.repository.UserRepository;
 import com.itelectric.backend.service.contract.GenericUserService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 public class CustomerService extends GenericUserService {
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private PasswordEncoder encoder;
 
-    public CustomerService(UserRepository repository, PasswordEncoder encoder) {
-        super(repository, encoder);
+    public CustomerService(UserRepository repository, PasswordEncoder encoder, AuditingService auditingService) {
+        super(repository, encoder, auditingService);
     }
 
     @Override
