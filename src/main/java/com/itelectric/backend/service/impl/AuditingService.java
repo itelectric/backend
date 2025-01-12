@@ -1,9 +1,11 @@
 package com.itelectric.backend.service.impl;
 
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class AuditingService implements AuditorAware<String> {
 
     @Override
