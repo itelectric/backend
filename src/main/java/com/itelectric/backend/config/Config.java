@@ -1,6 +1,7 @@
 package com.itelectric.backend.config;
 
 import com.itelectric.backend.service.impl.AuditingService;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -17,5 +18,10 @@ public class Config {
     @Bean
     public AuditorAware<String> auditorProvider() {
         return new AuditingService();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }
