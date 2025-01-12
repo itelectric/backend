@@ -3,19 +3,17 @@ package com.itelectric.backend.service.contract;
 import com.itelectric.backend.domain.entity.User;
 import com.itelectric.backend.domain.exception.ConflictException;
 import com.itelectric.backend.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import com.itelectric.backend.service.impl.AuditingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
-@Transactional
 @RequiredArgsConstructor
 public abstract class GenericUserService {
-    private final UserRepository repository;
-    private final PasswordEncoder encoder;
+    protected final UserRepository repository;
+    protected final PasswordEncoder encoder;
+    protected  final AuditingService auditingService;
 
     public void create(User user) throws ConflictException {
         Optional<User> savedUser = this.repository.findByNuit(user.getNuit());
@@ -28,6 +26,11 @@ public abstract class GenericUserService {
 
         String encodedPassword = this.encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        user.setActive(true);
+        user.setDeleted(false);
+        //auditing user table
+        user.setCreatedBy(auditingService.getCurrentAuditor().get());
+        user.setLastModifiedBy(auditingService.getCurrentAuditor().get());
         this.repository.save(user);
     }
 }
