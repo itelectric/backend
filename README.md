@@ -10,7 +10,8 @@ O projeto visa desenvolver um sistema de gestão de cotações que permita:
 
 ## Introdução
 
-O **Sistema de Gestão de Cotações** é uma aplicação backend desenvolvida para simplificar o processo de solicitação de cotações de produtos ou serviços.
+O **Sistema de Gestão de Cotações** é uma aplicação backend desenvolvida para simplificar o processo de solicitação de
+cotações de produtos ou serviços.
 
 ## Tecnologias Utilizadas
 
