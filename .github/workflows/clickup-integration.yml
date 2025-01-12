@@ -1,0 +1,39 @@
+name: ClickUp Integration
+on:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - closed
+
+jobs:
+  update-clickup-task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Get task ID from branch name
+        id: get_task_id
+        run: |
+          echo "Branch being merged: $GITHUB_HEAD_REF"
+          TASK_ID=$(echo "${GITHUB_HEAD_REF}" | sed -E 's/^[^\-]+\-([^-]+).*/\1/')
+          echo "Extracted Task ID: $TASK_ID"
+          echo "TASK_ID=$TASK_ID" >> $GITHUB_ENV
+
+      - name: Update ClickUp task status to "RREADY TO DEVELOP"
+        env:
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          TASK_ID: ${{ env.TASK_ID }}
+        run: |
+          if [ -z "$TASK_ID" ]; then
+            echo "No task ID found in branch name. Skipping..."
+            exit 0
+          fi
+
+          curl -X PUT "https://api.clickup.com/api/v2/task/$TASK_ID" \
+          -H "Authorization: $CLICKUP_API_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d '{
+                "status": "READY TO DEVELOP"
+              }'
