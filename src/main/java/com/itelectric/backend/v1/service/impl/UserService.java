@@ -2,6 +2,7 @@ package com.itelectric.backend.v1.service.impl;
 
 import com.itelectric.backend.v1.domain.entity.User;
 import com.itelectric.backend.v1.domain.exception.UnauthorizedException;
+import com.itelectric.backend.v1.repository.RoleRepository;
 import com.itelectric.backend.v1.repository.UserRepository;
 import com.itelectric.backend.v1.service.contract.GenericUserService;
 import com.itelectric.backend.v1.service.contract.IKeycloakCLIService;
@@ -20,8 +21,12 @@ import java.io.IOException;
 @Transactional
 public class UserService extends GenericUserService {
 
-    public UserService(UserRepository repository, PasswordEncoder encoder, AuditingService auditingService, IKeycloakCLIService keycloakCLIService) {
-        super(repository, encoder, auditingService, keycloakCLIService);
+    public UserService(UserRepository repository,
+                       PasswordEncoder encoder,
+                       AuditingService auditingService,
+                       RoleRepository roleRepository,
+                       IKeycloakCLIService keycloakCLIService) {
+        super(repository, encoder, auditingService, roleRepository, keycloakCLIService);
     }
 
     @Override
@@ -34,6 +39,6 @@ public class UserService extends GenericUserService {
                             HttpServletRequest request,
                             HttpServletResponse response,
                             FilterChain filterChain) throws UnauthorizedException, VerificationException, ServletException, IOException {
-        return super.getUserInfo(token,request,response,filterChain);
+        return super.getUserInfo(token, request, response, filterChain);
     }
 }

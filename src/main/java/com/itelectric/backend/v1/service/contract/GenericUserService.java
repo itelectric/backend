@@ -1,7 +1,9 @@
 package com.itelectric.backend.v1.service.contract;
 
+import com.itelectric.backend.v1.domain.entity.Role;
 import com.itelectric.backend.v1.domain.entity.User;
 import com.itelectric.backend.v1.domain.exception.*;
+import com.itelectric.backend.v1.repository.RoleRepository;
 import com.itelectric.backend.v1.repository.UserRepository;
 import com.itelectric.backend.v1.service.impl.AuditingService;
 import jakarta.servlet.FilterChain;
@@ -14,6 +16,7 @@ import org.keycloak.common.VerificationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public abstract class GenericUserService {
     protected final UserRepository repository;
     protected final PasswordEncoder encoder;
     protected final AuditingService auditingService;
+    private final RoleRepository roleRepository;
     private final IKeycloakCLIService keycloakCLIService;
 
     public void create(User user) throws ConflictException, BusinessException, UnexpectedException, ForbiddenException {
@@ -31,6 +35,12 @@ public abstract class GenericUserService {
         savedUser = this.repository.findByUsername(user.getUsername());
         if (savedUser.isPresent())
             throw new ConflictException("Username already taken.");
+
+        for (Role item : user.getRoles()) {
+            Optional<Role> role = this.roleRepository.findByName(item.getName());
+            if (role.isEmpty()) throw new UnexpectedException("Can't associate user to role." + role.get().getName());
+            user.setRoles(List.of(role.get()));
+        }
 
         this.keycloakCLIService.createUser(user);
         String encodedPassword = this.encoder.encode(user.getPassword());
@@ -48,11 +58,11 @@ public abstract class GenericUserService {
     }
 
     public User getUserInfo(String token,
-                              HttpServletRequest request,
-                              HttpServletResponse response,
-                              FilterChain filterChain) throws UnauthorizedException, VerificationException, ServletException, IOException {
-        String username = this.keycloakCLIService.getUserInfo(token,request,response,filterChain);
-        if(StringUtils.isEmpty(username)) throw new UnauthorizedException("Unauthorized");
+                            HttpServletRequest request,
+                            HttpServletResponse response,
+                            FilterChain filterChain) throws UnauthorizedException, VerificationException, ServletException, IOException {
+        String username = this.keycloakCLIService.getUserInfo(token, request, response, filterChain);
+        if (StringUtils.isEmpty(username)) throw new UnauthorizedException("Unauthorized");
         Optional<User> user = this.repository.findByUsername(username);
         if (user.isEmpty()) throw new UnauthorizedException("Unauthorized");
         return user.get();

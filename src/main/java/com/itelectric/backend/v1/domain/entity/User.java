@@ -1,6 +1,5 @@
 package com.itelectric.backend.v1.domain.entity;
 
-import com.itelectric.backend.v1.domain.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,7 +30,7 @@ public class User extends AbstractAuditingEntity implements Serializable, UserDe
     @Column(nullable = false, unique = true)
     private String nuit;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "fk_contact_id", referencedColumnName = "id")
     private Contact contact;
 
@@ -44,9 +43,14 @@ public class User extends AbstractAuditingEntity implements Serializable, UserDe
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserType type;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "t_users_roles",
+            joinColumns = @JoinColumn(
+                    name = "fk_user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "fk_role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 
     @Column(name = "is_active")
     private boolean isActive;

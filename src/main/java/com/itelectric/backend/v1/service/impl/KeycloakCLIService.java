@@ -1,5 +1,6 @@
 package com.itelectric.backend.v1.service.impl;
 
+import com.itelectric.backend.v1.domain.entity.Role;
 import com.itelectric.backend.v1.domain.entity.User;
 import com.itelectric.backend.v1.domain.exception.*;
 import com.itelectric.backend.v1.service.contract.IKeycloakCLIService;
@@ -14,18 +15,17 @@ import lombok.RequiredArgsConstructor;
 import org.keycloak.TokenVerifier;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.admin.client.resource.GroupsResource;
-import org.keycloak.common.VerificationException;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.GroupRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -86,17 +86,11 @@ public class KeycloakCLIService implements IKeycloakCLIService {
         Response response = this.keycloak.realm(this.realm).users().create(userToSave);
         //getting user id
         String location = response.getHeaderString("Location");
+        if (location == null || location.isEmpty())
+            throw new UnexpectedException("Could not complete user creation. Keycloak location null");
         String userId = location.substring(location.lastIndexOf("/") + 1);
-        //Associate user to group
-        String groupName = user.getType().name();
-        GroupsResource groupsResource = this.keycloak.realm(this.realm).groups();
-        GroupRepresentation group = groupsResource.groups()
-                .stream()
-                .filter(g -> g.getName().equals(groupName))
-                .findFirst()
-                .orElseThrow(() -> new UnexpectedException("Cannot find group " + groupName));
-        // adding user tio group
-        this.keycloak.realm(this.realm).users().get(userId).joinGroup(group.getId());
+        //Associate user to role and Getting client roles
+        this.assignRoleToUser(userId, user.getRoles().stream().toList());
         FuncUtils.handlingKeycloakResponse(response);
         this.close();
     }
@@ -144,5 +138,26 @@ public class KeycloakCLIService implements IKeycloakCLIService {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
+    }
+
+    private String getClientUUId() {
+        return this.keycloak.realm(this.realm).clients().findByClientId(this.clientId).get(0).getId();
+    }
+
+    private List<RoleRepresentation> getClientRoles() throws UnexpectedException {
+        String clientUUId = this.getClientUUId();
+        return this.keycloak.realm(this.realm).clients().get(clientUUId).roles().list();
+    }
+
+    private void assignRoleToUser(String userId, List<Role> roles) throws UnexpectedException {
+        String clientUUId = this.getClientUUId();
+        List<RoleRepresentation> clientRoles = this.getClientRoles();
+
+        RoleRepresentation roleRepresentation = clientRoles.stream()
+                .filter(item -> item.getName().equals(roles.getFirst().getName()))
+                .findFirst()
+                .orElseThrow(() -> new UnexpectedException("Can't find role " + roles.getFirst().getName() + " on Keycloak!"));
+
+        keycloak.realm(realm).users().get(userId).roles().clientLevel(clientUUId).add(List.of(roleRepresentation));
     }
 }
