@@ -1,6 +1,7 @@
 package com.itelectric.backend.v1.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    @Value("${keycloak.client-id}")
+    private String clientId;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,7 +60,7 @@ public class SecurityConfig {
     private Collection<GrantedAuthority> extractRoles(Jwt jwt) {
         Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
         if (resourceAccess == null) return List.of();
-        Map<String, Object> clientAccess = (Map<String, Object>) resourceAccess.get("iteletric-client");
+        Map<String, Object> clientAccess = (Map<String, Object>) resourceAccess.get(this.clientId);
         if (clientAccess == null || !clientAccess.containsKey("roles")) return List.of();
         List<String> roles = (List<String>) clientAccess.get("roles");
         return roles.stream()
