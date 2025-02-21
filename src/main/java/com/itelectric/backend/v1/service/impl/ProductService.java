@@ -33,11 +33,10 @@ public class ProductService implements IProductService {
 
     @Override
     public void create(Product product) throws ConflictException {
-        ProductType type = ProductType.PRODUCT;
+        product.setType(ProductType.PRODUCT);
         this.validateProductBeforeInsert(product);
         product.setDeleted(false);
         product.setAvailable(true);
-        product.setType(type);
         //auditing
         product.setCreatedBy(auditingService.getCurrentAuditor().get());
         product.setLastModifiedBy(auditingService.getCurrentAuditor().get());

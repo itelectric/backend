@@ -19,7 +19,7 @@ import java.time.Duration;
 @AllArgsConstructor
 @Table(name = "t_service")
 @PrimaryKeyJoinColumn(name = "id")
-public class Service extends BaseProduct implements Serializable {
+public class ServiceManager extends BaseProduct implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Column(nullable = false)
