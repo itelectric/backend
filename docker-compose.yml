@@ -32,34 +32,37 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
     depends_on:
       - iteletric-database
+    volumes:
+      - keycloak-dbdata:/data/db
     networks:
       - iteletric-network
     command: start --http-enabled=true
 
-  iteletric-backend:
-    build:
-      context: .
-    container_name: iteletric-backend
-    ports:
-      - "8080:8080"
-    expose:
-      - "8080"
-    depends_on:
-      - iteletric-database
-      - keycloak-server
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      ## DATABASE CONFIGURATION
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://iteletric-database:5432/iteletric
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - SPRING_JPA_SHOW_SQL=false
-    command: mvn spring-boot:run
-    networks:
-      - iteletric-network
+#  iteletric-backend:
+#    build:
+#      context: .
+#    container_name: iteletric-backend
+#    ports:
+#      - "8080:8080"
+#    expose:
+#      - "8080"
+#    depends_on:
+#      - iteletric-database
+#      - keycloak-server
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=prod
+#      ## DATABASE CONFIGURATION
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://iteletric-database:5432/iteletric
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_JPA_SHOW_SQL=false
+#    command: mvn spring-boot:run
+#    networks:
+#      - iteletric-network
 
 volumes:
   iteletric-dbdata:
+  keycloak-dbdata:
 
 networks:
   iteletric-network:

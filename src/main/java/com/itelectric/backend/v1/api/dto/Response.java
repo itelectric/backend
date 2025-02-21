@@ -11,5 +11,4 @@ public class Response {
     private int code;
     private String status;
     private Object body;
-
 }

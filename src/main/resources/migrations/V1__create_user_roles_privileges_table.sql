@@ -70,13 +70,13 @@ CREATE TABLE t_users_roles (
 
 -- INSERTING DATA TO PRIVILEGE AND ROLE TABLES
 INSERT INTO t_privileges (name,is_active,is_deleted,created_by)
-    VALUES ('READ_PRIVILEGE',true,false,'ITELETRIC'),
-           ('WRITE_PRIVILEGE',true,false,'ITELETRIC'),
-           ('DELETE_PRIVILEGE',true,false,'ITELETRIC'),
-           ('UPDATE_PRIVILEGE',true,false,'ITELETRIC');
+    VALUES ('READ_PRIVILEGE',true,false,'SYSTEM'),
+           ('WRITE_PRIVILEGE',true,false,'SYSTEM'),
+           ('DELETE_PRIVILEGE',true,false,'SYSTEM'),
+           ('UPDATE_PRIVILEGE',true,false,'SYSTEM');
 
 INSERT INTO t_roles (name,is_active,is_deleted,created_by)
-    VALUES ('ROLE_ADMIN',true,false,'ITELETRIC'),
-           ('ROLE_COMPANY',true,false,'ITELETRIC'),
-           ('ROLE_CUSTOMER',true,false,'ITELETRIC'),
-           ('ROLE_SUPERUSER',true,false,'ITELETRIC');
+    VALUES ('ROLE_ADMIN',true,false,'SYSTEM'),
+           ('ROLE_COMPANY',true,false,'SYSTEM'),
+           ('ROLE_CUSTOMER',true,false,'SYSTEM'),
+           ('ROLE_SUPERUSER',true,false,'SYSTEM');
