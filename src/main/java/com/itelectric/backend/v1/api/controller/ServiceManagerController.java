@@ -1,6 +1,8 @@
 package com.itelectric.backend.v1.api.controller;
 
-import com.itelectric.backend.v1.api.dto.*;
+import com.itelectric.backend.v1.api.dto.CreateServiceRequest;
+import com.itelectric.backend.v1.api.dto.Response;
+import com.itelectric.backend.v1.api.dto.UpdateServiceRequest;
 import com.itelectric.backend.v1.domain.entity.ServiceManager;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.NotFoundException;
@@ -115,7 +117,7 @@ public class ServiceManagerController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<Response> update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateServiceManagerRequest request)
+    public ResponseEntity<Response> update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateServiceRequest request)
             throws ConflictException, NotFoundException {
         ServiceManager serviceManager = this.mapper.map(request, ServiceManager.class);
         serviceManager.setId(id);

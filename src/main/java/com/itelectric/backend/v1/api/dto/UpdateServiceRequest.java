@@ -12,7 +12,7 @@ import java.time.Duration;
 @Data
 @Builder
 @AllArgsConstructor
-public class UpdateServiceManagerRequest {
+public class UpdateServiceRequest {
     @Size(min = 6, message = "Name must have at least 6 characters.")
     private String name;
 
