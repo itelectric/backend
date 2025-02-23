@@ -1,12 +1,15 @@
 package com.itelectric.backend.v1.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itelectric.backend.v1.domain.entity.AbstractAuditingEntity;
 import com.itelectric.backend.v1.domain.enums.GeralEnuns;
 import com.itelectric.backend.v1.domain.exception.BusinessException;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.ForbiddenException;
 import com.itelectric.backend.v1.domain.exception.UnexpectedException;
+import com.itelectric.backend.v1.service.impl.AuditingService;
 import jakarta.ws.rs.core.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Scanner;
 
@@ -53,5 +56,20 @@ public class FuncUtils {
 
     public static String getRemoveRolePrefix(String role) {
         return role.substring(5); // ROLE_XTXTX
+    }
+
+    public static AbstractAuditingEntity  setAuditFields(AbstractAuditingEntity entity) {
+        AuditingService auditingService = new AuditingService();
+        String auditor = auditingService.getCurrentAuditor().get();
+        entity.setCreatedBy(auditor);
+        entity.setLastModifiedBy(auditor);
+        return entity;
+    }
+
+    public static AbstractAuditingEntity  setLastModifiedBy(AbstractAuditingEntity entity) {
+        AuditingService auditingService = new AuditingService();
+        String auditor = auditingService.getCurrentAuditor().get();
+        entity.setLastModifiedBy(auditor);
+        return entity;
     }
 }
