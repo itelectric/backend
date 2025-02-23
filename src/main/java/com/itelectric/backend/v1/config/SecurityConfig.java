@@ -1,5 +1,7 @@
 package com.itelectric.backend.v1.config;
 
+import com.itelectric.backend.v1.domain.enums.Roles;
+import com.itelectric.backend.v1.utils.FuncUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,10 +35,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/customers/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/companies/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/admins/**").hasRole("SUPERUSER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_ADMIN.name()))
+                        .requestMatchers(HttpMethod.GET, "/api/v1/services/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/services/**").hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_ADMIN.name()))
+                        .requestMatchers(HttpMethod.POST, "/api/v1/admins/**").hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_SUPERUSER.name()))
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));

@@ -3,7 +3,7 @@ SELECT 'CREATE DATABASE keycloak'
 WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'keycloak')
 \gexec
 
--- Verificar e criar o banco de dados 'itelectric'
-SELECT 'CREATE DATABASE itelectric'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'itelectric')
+-- Verificar e criar o banco de dados 'iteletric'
+SELECT 'CREATE DATABASE iteletric'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'iteletric')
 \gexec

@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class AddressDTO {
+public class AddressRequest {
     @NotNull(message = "Phone is  required.")
     @NotBlank(message = "Phone is required.")
     private String street;

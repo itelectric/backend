@@ -11,17 +11,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.Objects;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BusinessException.class)
+    @ExceptionHandler({BusinessException.class, HandlerMethodValidationException.class})
     public ResponseEntity<Response> handleBusinessExceptions(Exception ex) {
         Response response = new Response(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.name(),
                 ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    //Dealing with customized exceptions
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Response> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage();
+        Response response = new Response(HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.name(),
+                errorMessage);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -39,16 +50,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN.name(),
                 ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-    }
-
-    //Dealing with customized exceptions
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Response> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        String errorMessage = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage();
-        Response response = new Response(HttpStatus.METHOD_NOT_ALLOWED.value(),
-                HttpStatus.METHOD_NOT_ALLOWED.name(),
-                errorMessage);
-        return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(ConflictException.class)

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "Customer")
+@Tag(name = "Company")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/companies")
 public class CompanyController {
@@ -34,9 +34,9 @@ public class CompanyController {
     @Operation(summary = "Register company")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created"),
-            @ApiResponse(responseCode = "400", description = "Bad Request happened"),
-            @ApiResponse(responseCode = "500", description = "An unexpected error occurred")
+            @ApiResponse(responseCode = "201", description = "CREATED"),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     public ResponseEntity<Response> create(@Valid @RequestBody CreateCompanyRequest request) throws ConflictException, BusinessException, UnexpectedException, ForbiddenException {
         User user = this.mapper.map(request, User.class);

@@ -21,8 +21,8 @@ public class CreateCustomerRequest {
     @Size(min = 15, max = 15, message = "Nuit must have exactly 15 characters.")
     private String nuit;
 
-    private ContactDTO contact;
-    private AddressDTO address;
+    private ContactRequest contact;
+    private AddressRequest address;
 
     @NotNull(message = "Username is required.")
     @NotBlank(message = "Username is required.")
