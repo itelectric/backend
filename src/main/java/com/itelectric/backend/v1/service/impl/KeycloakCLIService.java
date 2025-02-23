@@ -84,6 +84,7 @@ public class KeycloakCLIService implements IKeycloakCLIService {
         userToSave.setCredentials(Collections.singletonList(credential));
         //Adding user to keycloak
         Response response = this.keycloak.realm(this.realm).users().create(userToSave);
+        FuncUtils.handlingKeycloakResponse(response);
         //getting user id
         String location = response.getHeaderString("Location");
         if (location == null || location.isEmpty())

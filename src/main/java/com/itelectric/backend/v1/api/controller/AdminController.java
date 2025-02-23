@@ -21,7 +21,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,9 +44,9 @@ public class AdminController {
     @Operation(summary = "Register Admin")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created"),
-            @ApiResponse(responseCode = "400", description = "Bad Request happened"),
-            @ApiResponse(responseCode = "500", description = "An unexpected error occurred")
+            @ApiResponse(responseCode = "201", description = "CREATED"),
+            @ApiResponse(responseCode = "400", description = "BAD_REQUEST"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Response> create(@Valid @RequestBody CreateAdminRequest request) throws ConflictException, BusinessException, UnexpectedException, ForbiddenException {
