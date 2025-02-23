@@ -2,6 +2,7 @@ package com.itelectric.backend.v1.service.impl;
 
 
 import com.itelectric.backend.v1.domain.entity.BaseProduct;
+import com.itelectric.backend.v1.domain.entity.Product;
 import com.itelectric.backend.v1.domain.entity.ServiceManager;
 import com.itelectric.backend.v1.domain.enums.ProductType;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
@@ -9,6 +10,7 @@ import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import com.itelectric.backend.v1.repository.BaseProductRepository;
 import com.itelectric.backend.v1.repository.ServiceManagerRepository;
 import com.itelectric.backend.v1.service.contract.IServiceManagerService;
+import com.itelectric.backend.v1.utils.FuncUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +78,7 @@ public class ServiceManagerService implements IServiceManagerService {
     public void delete(UUID id) throws NotFoundException {
         ServiceManager serviceManager = this.readByID(id);
         serviceManager.setDeleted(true);
-        serviceManager.setLastModifiedBy(auditingService.getCurrentAuditor().get());
+        serviceManager = (ServiceManager) FuncUtils.setLastModifiedBy(serviceManager);
         this.serviceManagerRepository.save(serviceManager);
     }
 
@@ -106,24 +108,25 @@ public class ServiceManagerService implements IServiceManagerService {
         }
     }
 
-    private void updateProductData(ServiceManager sabedServiceManager, ServiceManager serviceManager) {
+    private void updateProductData(ServiceManager savedServiceManager, ServiceManager serviceManager) {
         Optional.ofNullable(serviceManager.getName())
-                .filter(name -> !name.isEmpty() && !name.equals(sabedServiceManager.getName()))
-                .ifPresent(sabedServiceManager::setName);
+                .filter(name -> !name.isEmpty() && !name.equals(savedServiceManager.getName()))
+                .ifPresent(savedServiceManager::setName);
 
         Optional.ofNullable(serviceManager.getDescription())
-                .filter(desc -> !desc.isEmpty() && !desc.equals(sabedServiceManager.getDescription()))
-                .ifPresent(sabedServiceManager::setDescription);
+                .filter(desc -> !desc.isEmpty() && !desc.equals(savedServiceManager.getDescription()))
+                .ifPresent(savedServiceManager::setDescription);
 
         Optional.ofNullable(serviceManager.getPrice())
-                .filter(price -> price.compareTo(BigDecimal.ZERO) != 0 && !price.equals(sabedServiceManager.getPrice()))
-                .ifPresent(sabedServiceManager::setPrice);
+                .filter(price -> price.compareTo(BigDecimal.ZERO) != 0 && !price.equals(savedServiceManager.getPrice()))
+                .ifPresent(savedServiceManager::setPrice);
 
         Optional.ofNullable(serviceManager.getEstimatedTime())
-                .filter(duration -> !duration.equals(Duration.ZERO) && !duration.equals(sabedServiceManager.getEstimatedTime()))
-                .ifPresent(sabedServiceManager::setEstimatedTime);
+                .filter(duration -> !duration.equals(Duration.ZERO) && !duration.equals(savedServiceManager.getEstimatedTime()))
+                .ifPresent(savedServiceManager::setEstimatedTime);
 
-        serviceManager.setLastModifiedBy(auditingService.getCurrentAuditor().get());
-        this.serviceManagerRepository.save(sabedServiceManager);
+        ServiceManager finalServiceManager = savedServiceManager;
+        finalServiceManager = (ServiceManager) FuncUtils.setLastModifiedBy(finalServiceManager);
+        this.serviceManagerRepository.save(finalServiceManager);
     }
 }
