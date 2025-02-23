@@ -58,15 +58,18 @@ if [ -z "$BACKUP_FILE" ]; then
     sleep 10
     exit 1
 fi
-docker cp "C:/Users/Dombo/iteletric-dbdumps/$BACKUP_FILE" $CONTAINER_NAM:/tmp/$BACKUP_FILE
-docker exec -it "$CONTAINER_NAME" ls -l /backup
-sleep 100
+
+docker cp "$BACKUP_DIR/$BACKUP_FILE" $CONTAINER_NAME:/tmp/$BACKUP_FILE
 
 # Restore the database
 if [ "$USE_SUDO" == "true" ]; then
     # For Linux/Mac, use the backup directory directly
+    sudo docker exec -t "$CONTAINER_NAME" bash -c "
+      psql -U postgres -c \"DROP DATABASE IF EXISTS $DATABASE_NAME;\";
+      psql -U postgres -c \"CREATE DATABASE $DATABASE_NAME;\";
+      pg_restore -U postgres -d $DATABASE_NAME -F c \"/tmp/$BACKUP_FILE\"
+    "
 #    sudo docker exec -t "$CONTAINER_NAME" pg_restore -U postgres -d "$DATABASE_NAME"  -F c "/tmp/$BACKUP_FILE"
-    sudo docker run --rm -v "$BACKUP_DIR":/backup -it postgres pg_restore -U postgres -d "$DATABASE_NAME" -F c "/backup/$BACKUP_FILE"
 else
    # For Windows, the path will have to be mapped to the correct path inside the Docker container
 #    docker exec -it "$CONTAINER_NAME" pg_restore -U postgres -d "$DATABASE_NAME"  -F c "/tmp/$BACKUP_FILE"

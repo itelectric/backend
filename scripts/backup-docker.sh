@@ -11,7 +11,7 @@ fi
 CONTAINER_NAME=$1
 DATABASE_NAME=$2
 BACKUP_DIR="$HOME/iteletric-dbdumps"
-BACKUP_FILE="${DATABASE_NAME}-backup-$(date +%Y%m%d%H%M%S).dump"
+BACKUP_FILE="${DATABASE_NAME}-backup.dump"
 
 # Create backup directory if it doesn't exist
 mkdir -p "$BACKUP_DIR"
