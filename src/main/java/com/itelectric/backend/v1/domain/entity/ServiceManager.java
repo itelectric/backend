@@ -1,6 +1,9 @@
 package com.itelectric.backend.v1.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +25,11 @@ public class ServiceManager extends BaseProduct implements Serializable {
     @Column(name = "estimated_time", nullable = false)
     private Long estimatedTime;
 
-    public void setEstimatedTime(Duration duration) {
-        this.estimatedTime = (duration != null) ? duration.getSeconds() : null;
-    }
-
     public Duration getEstimatedTime() {
         return (estimatedTime != null) ? Duration.ofSeconds(estimatedTime) : null;
+    }
+
+    public void setEstimatedTime(Duration duration) {
+        this.estimatedTime = (duration != null) ? duration.getSeconds() : null;
     }
 }

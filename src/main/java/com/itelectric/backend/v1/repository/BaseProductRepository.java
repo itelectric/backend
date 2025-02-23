@@ -23,4 +23,7 @@ public interface BaseProductRepository extends JpaRepository<BaseProduct, UUID> 
             + " AND b.isDeleted = false"
             + " AND b.type = :type")
     Optional<BaseProduct> findByDescriptionFAndType(@Param("description") String description, @Param("type") ProductType type);
+
+    @Query("SELECT b FROM BaseProduct b WHERE b.id = :id AND b.isDeleted = false")
+    Optional<BaseProduct> findById(@Param("id") UUID id);
 }

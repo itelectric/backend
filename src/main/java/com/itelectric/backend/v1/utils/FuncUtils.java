@@ -9,7 +9,6 @@ import com.itelectric.backend.v1.domain.exception.ForbiddenException;
 import com.itelectric.backend.v1.domain.exception.UnexpectedException;
 import com.itelectric.backend.v1.service.impl.AuditingService;
 import jakarta.ws.rs.core.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Scanner;
 
@@ -58,7 +57,7 @@ public class FuncUtils {
         return role.substring(5); // ROLE_XTXTX
     }
 
-    public static AbstractAuditingEntity  setAuditFields(AbstractAuditingEntity entity) {
+    public static AbstractAuditingEntity setAuditFields(AbstractAuditingEntity entity) {
         AuditingService auditingService = new AuditingService();
         String auditor = auditingService.getCurrentAuditor().get();
         entity.setCreatedBy(auditor);
@@ -66,7 +65,7 @@ public class FuncUtils {
         return entity;
     }
 
-    public static AbstractAuditingEntity  setLastModifiedBy(AbstractAuditingEntity entity) {
+    public static AbstractAuditingEntity setLastModifiedBy(AbstractAuditingEntity entity) {
         AuditingService auditingService = new AuditingService();
         String auditor = auditingService.getCurrentAuditor().get();
         entity.setLastModifiedBy(auditor);

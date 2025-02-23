@@ -2,7 +2,6 @@ package com.itelectric.backend.v1.service.impl;
 
 
 import com.itelectric.backend.v1.domain.entity.BaseProduct;
-import com.itelectric.backend.v1.domain.entity.Product;
 import com.itelectric.backend.v1.domain.entity.ServiceManager;
 import com.itelectric.backend.v1.domain.enums.ProductType;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
