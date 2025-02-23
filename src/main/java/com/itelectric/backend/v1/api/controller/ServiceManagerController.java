@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -46,6 +48,10 @@ public class ServiceManagerController {
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Response> create(@Valid @RequestBody CreateServiceRequest request) throws ConflictException {
         ServiceManager serviceManager = this.mapper.map(request, ServiceManager.class);
+        Duration estimatedTime = Duration.ofMinutes(0);
+        if (!StringUtils.isEmpty(request.getEstimatedTime()))
+            estimatedTime = Duration.parse(request.getEstimatedTime());
+        serviceManager.setEstimatedTime(estimatedTime);
         this.service.create(serviceManager);
         Response response = new Response(HttpStatus.CREATED.value(),
                 HttpStatus.CREATED.name(),

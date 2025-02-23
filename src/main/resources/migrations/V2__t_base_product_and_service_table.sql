@@ -24,6 +24,6 @@ CREATE TABLE t_product
 -- Creating table service
 CREATE TABLE t_service
 (
-    id UUID PRIMARY KEY REFERENCES t_base_product (id) ON DELETE CASCADE,
+    id             UUID PRIMARY KEY REFERENCES t_base_product (id) ON DELETE CASCADE,
     estimated_time INTERVAL NOT NULL
 );

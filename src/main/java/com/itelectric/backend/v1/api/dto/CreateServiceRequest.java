@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 
 @Data
 @Builder
@@ -29,5 +28,5 @@ public class CreateServiceRequest {
     @DecimalMin(value = "0.01", message = "Price must be greater than zero.")
     private BigDecimal price;
 
-    private Duration estimatedTime;
+    private String estimatedTime;
 }

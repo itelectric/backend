@@ -13,7 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 @Tag(name = "Authentication", description = "Authentication operations"),
                 @Tag(name = "Company", description = "Company operations"),
                 @Tag(name = "Customer", description = "Customer operations"),
-                @Tag(name = "Products", description = "Product operations")
+                @Tag(name = "Product", description = "Product operations"),
+                @Tag(name = "Service", description = "Product operations")
         }
 )
 @SpringBootApplication

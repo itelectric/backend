@@ -26,7 +26,7 @@ public class AuthController {
     private final UserService service;
 
     @Operation(summary = "Login")
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "20O", description = "OK"),
             @ApiResponse(responseCode = "400", description = "BAD_REQUEST"),
