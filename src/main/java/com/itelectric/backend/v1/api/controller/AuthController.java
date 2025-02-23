@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "User")
+@Tag(name = "Authentication")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
-public class UserController {
+@RequestMapping("/api/v1/auth")
+public class AuthController {
     private final UserService service;
 
-    @Operation(summary = "User Login")
+    @Operation(summary = "Login")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "20O", description = "OK"),
