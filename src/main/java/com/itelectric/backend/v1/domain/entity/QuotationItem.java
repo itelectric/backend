@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,13 +11,14 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_quotation_item")
+@Table(name = "t_quotation_items")
 public class QuotationItem extends AbstractAuditingEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quotation_item_seq")
+    @SequenceGenerator(name = "quotation_item_seq", sequenceName = "seq_quotation_item", allocationSize = 1)
+    private Integer id;
 
     @Column(nullable = false)
     private int quantity;

@@ -23,7 +23,6 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -59,7 +58,7 @@ public class ServiceManagerService implements IServiceManagerService {
     }
 
     @Override
-    public ServiceManager readByID(UUID id) throws NotFoundException {
+    public ServiceManager readByID(Integer id) throws NotFoundException {
         String errorMessage = MessageFormat.format("Could not find service with id:{0}", id);
         return this.serviceManagerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(errorMessage));
@@ -74,7 +73,7 @@ public class ServiceManagerService implements IServiceManagerService {
     }
 
     @Override
-    public void delete(UUID id) throws NotFoundException {
+    public void delete(Integer id) throws NotFoundException {
         ServiceManager serviceManager = this.readByID(id);
         serviceManager.setDeleted(true);
         serviceManager = (ServiceManager) FuncUtils.setLastModifiedBy(serviceManager);

@@ -9,13 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface ServiceManagerRepository extends JpaRepository<ServiceManager, UUID> {
+public interface ServiceManagerRepository extends JpaRepository<ServiceManager, Integer> {
     @Query("SELECT s FROM ServiceManager s WHERE s.isDeleted = false")
     Page<ServiceManager> findALl(Pageable pageable);
 
     @Query("SELECT s FROM ServiceManager s WHERE s.id = :id AND s.isDeleted = false")
-    Optional<ServiceManager> findById(@Param("id") UUID id);
+    Optional<ServiceManager> findById(@Param("id") Integer id);
 }

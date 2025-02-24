@@ -6,7 +6,6 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,17 +13,22 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_quotation_order")
+@Table(name = "t_quotation_orders")
 public class QuotationOrder extends AbstractAuditingEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quotation_order_seq")
+    @SequenceGenerator(name = "quotation_order_seq", sequenceName = "seq_quotation_order", allocationSize = 1)
+    private Integer id;
 
     private String description;
 
     private LocalDate deadlineAnswer;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_user_id", nullable = false)
+    private User user;
 
     @OneToMany(mappedBy = "quotationOrder", fetch = FetchType.LAZY)
     private Set<QuotationItem> items;

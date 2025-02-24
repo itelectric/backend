@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -56,7 +55,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product readByID(UUID id) throws NotFoundException {
+    public Product readByID(Integer id) throws NotFoundException {
         String errorMessage = MessageFormat.format("Could not find product with id:{0}", id);
         return this.productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(errorMessage));
@@ -71,7 +70,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void delete(UUID id) throws NotFoundException {
+    public void delete(Integer id) throws NotFoundException {
         Product savedProduct = this.readByID(id);
         savedProduct.setDeleted(true);
         savedProduct = (Product) FuncUtils.setLastModifiedBy(savedProduct);

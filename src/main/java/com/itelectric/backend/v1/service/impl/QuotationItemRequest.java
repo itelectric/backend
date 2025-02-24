@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,5 +16,5 @@ public class QuotationItemRequest {
     private int quantity;
 
     @NotNull(message = "Product is required.")
-    private UUID productId;
+    private Integer productId;
 }

@@ -11,6 +11,13 @@ CREATE TABLE t_privileges
     last_modified_date TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE seq_privilege
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 CREATE TABLE t_roles
 (
     id                 SERIAL             NOT NULL PRIMARY KEY,
@@ -23,10 +30,17 @@ CREATE TABLE t_roles
     last_modified_date TIMESTAMP                   DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE seq_role
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 CREATE TABLE t_roles_privileges
 (
-    fk_role_id      INT NOT NULL,
-    fk_privilege_id INT NOT NULL,
+    fk_role_id      BIGINT NOT NULL,
+    fk_privilege_id BIGINT NOT NULL,
     PRIMARY KEY (fk_role_id, fk_privilege_id),
     FOREIGN KEY (fk_role_id) REFERENCES t_roles (id) ON DELETE CASCADE,
     FOREIGN KEY (fk_privilege_id) REFERENCES t_privileges (id) ON DELETE CASCADE
@@ -66,7 +80,7 @@ CREATE TABLE IF NOT EXISTS t_users
 CREATE TABLE t_users_roles
 (
     fk_user_id UUID NOT NULL,
-    fk_role_id INT  NOT NULL,
+    fk_role_id BIGINT  NOT NULL,
     PRIMARY KEY (fk_user_id, fk_role_id),
     FOREIGN KEY (fk_user_id) REFERENCES t_users (id) ON DELETE CASCADE,
     FOREIGN KEY (fk_role_id) REFERENCES t_roles (id) ON DELETE CASCADE

@@ -8,10 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
-public interface BaseProductRepository extends JpaRepository<BaseProduct, UUID> {
+public interface BaseProductRepository extends JpaRepository<BaseProduct, Integer> {
     @Query("SELECT b FROM BaseProduct b "
             + " WHERE UPPER(REPLACE(b.name, ' ', '')) = UPPER(REPLACE(:name, ' ', ''))"
             + " AND b.isDeleted = false"
@@ -25,5 +24,5 @@ public interface BaseProductRepository extends JpaRepository<BaseProduct, UUID> 
     Optional<BaseProduct> findByDescriptionFAndType(@Param("description") String description, @Param("type") ProductType type);
 
     @Query("SELECT b FROM BaseProduct b WHERE b.id = :id AND b.isDeleted = false")
-    Optional<BaseProduct> findById(@Param("id") UUID id);
+    Optional<BaseProduct> findById(@Param("id") Integer id);
 }
