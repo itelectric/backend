@@ -17,8 +17,9 @@ public class Privilege extends AbstractAuditingEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "privilege_seq")
+    @SequenceGenerator(name = "privilege_seq", sequenceName = "seq_privilege", allocationSize = 1)
+    private Integer id;
 
     private String name;
 

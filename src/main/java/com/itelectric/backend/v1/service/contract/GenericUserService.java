@@ -6,6 +6,7 @@ import com.itelectric.backend.v1.domain.exception.*;
 import com.itelectric.backend.v1.repository.RoleRepository;
 import com.itelectric.backend.v1.repository.UserRepository;
 import com.itelectric.backend.v1.service.impl.AuditingService;
+import com.itelectric.backend.v1.utils.FuncUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,8 +49,7 @@ public abstract class GenericUserService {
         user.setActive(true);
         user.setDeleted(false);
         //auditing user table
-        user.setCreatedBy(auditingService.getCurrentAuditor().get());
-        user.setLastModifiedBy(auditingService.getCurrentAuditor().get());
+        user = (User) FuncUtils.setAuditFields(user);
         this.repository.save(user);
     }
 

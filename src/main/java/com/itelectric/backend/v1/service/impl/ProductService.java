@@ -9,6 +9,7 @@ import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import com.itelectric.backend.v1.repository.BaseProductRepository;
 import com.itelectric.backend.v1.repository.ProductRepository;
 import com.itelectric.backend.v1.service.contract.IProductService;
+import com.itelectric.backend.v1.utils.FuncUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +22,6 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -37,9 +37,7 @@ public class ProductService implements IProductService {
         this.validateProductBeforeInsert(product);
         product.setDeleted(false);
         product.setAvailable(true);
-        //auditing
-        product.setCreatedBy(auditingService.getCurrentAuditor().get());
-        product.setLastModifiedBy(auditingService.getCurrentAuditor().get());
+        product = (Product) FuncUtils.setAuditFields(product);
         this.baseProductRepository.save(product);
     }
 
@@ -57,7 +55,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product readByID(UUID id) throws NotFoundException {
+    public Product readByID(Integer id) throws NotFoundException {
         String errorMessage = MessageFormat.format("Could not find product with id:{0}", id);
         return this.productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(errorMessage));
@@ -72,10 +70,10 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void delete(UUID id) throws NotFoundException {
+    public void delete(Integer id) throws NotFoundException {
         Product savedProduct = this.readByID(id);
         savedProduct.setDeleted(true);
-        savedProduct.setLastModifiedBy(auditingService.getCurrentAuditor().get());
+        savedProduct = (Product) FuncUtils.setLastModifiedBy(savedProduct);
         this.productRepository.save(savedProduct);
     }
 
@@ -122,7 +120,8 @@ public class ProductService implements IProductService {
                 .filter(quantity -> quantity != 0 && !quantity.equals(savedProduct.getStockQuantity()))
                 .ifPresent(savedProduct::setStockQuantity);
 
-        product.setLastModifiedBy(auditingService.getCurrentAuditor().get());
-        this.productRepository.save(savedProduct);
+        Product finalProduct = savedProduct;
+        finalProduct = (Product) FuncUtils.setLastModifiedBy(finalProduct);
+        this.productRepository.save(finalProduct);
     }
 }

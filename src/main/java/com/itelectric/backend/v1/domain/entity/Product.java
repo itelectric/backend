@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_product")
+@Table(name = "t_products")
 @PrimaryKeyJoinColumn(name = "id")
 public class Product extends BaseProduct implements Serializable {
     private static final long serialVersionUID = 1L;

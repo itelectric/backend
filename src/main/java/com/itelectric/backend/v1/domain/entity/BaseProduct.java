@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,14 +13,15 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_base_product")
+@Table(name = "t_base_products")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class BaseProduct extends AbstractAuditingEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "base_product_seq")
+    @SequenceGenerator(name = "base_product_seq", sequenceName = "seq_base_product", allocationSize = 1)
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
