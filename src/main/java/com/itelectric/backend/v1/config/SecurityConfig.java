@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/products/**")
                         .hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_ADMIN.name()))
 
-                        .requestMatchers(HttpMethod.POST, "/api/v1/quotations/**")
+                        .requestMatchers("/api/v1/quotations/**")
                         .hasAnyRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_CUSTOMER.name())
                                 , FuncUtils.getRemoveRolePrefix(Roles.ROLE_COMPANY.name()))
 

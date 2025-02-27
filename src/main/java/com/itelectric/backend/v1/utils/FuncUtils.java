@@ -19,6 +19,10 @@ import java.util.Scanner;
 @Component
 public class FuncUtils implements ApplicationContextAware {
     private static ApplicationContext context;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        context = applicationContext;
+    }
 
     public static void handlingKeycloakResponse(Response response) throws ConflictException, BusinessException, UnexpectedException, ForbiddenException {
         switch (response.getStatus()) {
@@ -82,10 +86,5 @@ public class FuncUtils implements ApplicationContextAware {
     public static User getLoogedUser() {
         AuditingService auditingService = context.getBean(AuditingService.class);
         return auditingService.getLoggedUser();
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        context = applicationContext;
     }
 }

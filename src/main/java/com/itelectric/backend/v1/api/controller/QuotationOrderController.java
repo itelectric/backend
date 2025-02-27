@@ -5,6 +5,7 @@ import com.itelectric.backend.v1.api.dto.Response;
 import com.itelectric.backend.v1.domain.entity.BaseProduct;
 import com.itelectric.backend.v1.domain.entity.QuotationItem;
 import com.itelectric.backend.v1.domain.entity.QuotationOrder;
+import com.itelectric.backend.v1.domain.exception.BusinessException;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.DuplicationException;
 import com.itelectric.backend.v1.domain.exception.NotFoundException;
@@ -46,7 +47,8 @@ public class QuotationOrderController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<Response> create(@Valid @RequestBody OrderQuotationRequest request) throws ConflictException, DuplicationException, NotFoundException {
+    public ResponseEntity<Response> create(@Valid @RequestBody OrderQuotationRequest request)
+            throws ConflictException, DuplicationException, NotFoundException, BusinessException {
         QuotationOrder quotationOrder = this.mapper.map(request, QuotationOrder.class);
         List<QuotationItem> items = new ArrayList<>();
         items
@@ -73,7 +75,7 @@ public class QuotationOrderController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<byte[]> getQuotation(@PathVariable("quotationId") Integer quotationId) throws NotFoundException, IOException {
+    public ResponseEntity<byte[]> getQuotation(@PathVariable("quotationId") Integer quotationId) throws Exception {
         byte[] pdf = this.service.getQuotation(quotationId);
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String filename = "QuotationReport-" + timestamp + ".pdf";

@@ -1,6 +1,5 @@
 <!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
-<jasperReport name="QuotationReport" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6f0d9597-4e45-44b0-a027-ff8d58226912">
-	<parameter name="list" class="java.util.List"/>
+<jasperReport name="QuotationReport" language="java" columnCount="1" pageWidth="553" pageHeight="842" columnWidth="553" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6f0d9597-4e45-44b0-a027-ff8d58226912">
 	<query language="sql"><![CDATA[]]></query>
 	<field name="baseProductId" class="java.lang.Integer"/>
 	<field name="baseProductName" class="java.lang.String"/>
@@ -11,83 +10,119 @@
 	<variable name="subtotal" class="java.math.BigDecimal">
 		<expression><![CDATA[$F{baseProductUnitPrice}.multiply(new java.math.BigDecimal($F{quantity}))]]></expression>
 	</variable>
+	<variable name="total" calculation="Sum" class="java.math.BigDecimal">
+		<expression><![CDATA[$V{subtotal}]]></expression>
+	</variable>
 	<background splitType="Stretch"/>
 	<detail>
-		<band height="94" splitType="Stretch">
-			<element kind="staticText" uuid="55603d3e-6401-4ac7-ac1f-3ee0ec792517" x="0" y="2" width="90" height="14" bold="true" hTextAlign="Left">
-				<text><![CDATA[CÓD. MATERIAL]]></text>
+		<band height="98" splitType="Stretch">
+			<element kind="rectangle" uuid="a2007b03-8c8f-4ab1-8319-22007a48f651" mode="Opaque" x="0" y="0" width="553" height="16" forecolor="#000203" backcolor="#B7B7B7">
+				<pen lineWidth="0.0" lineStyle="Dashed"/>
+			</element>
+			<element kind="textField" uuid="597d2e0f-1422-486e-9b81-05aec4c01a6b" x="0" y="16" width="90" height="15" hTextAlign="Center">
+				<expression><![CDATA[$F{baseProductId}]]></expression>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="staticText" uuid="5baefcac-2056-46e0-b792-a14bc0914997" x="94" y="2" width="178" height="14" bold="true" hTextAlign="Left">
-				<text><![CDATA[NOME MATERIAL]]></text>
+			<element kind="textField" uuid="dd052b50-9067-4bec-9a98-8b8a1c51c387" x="273" y="16" width="97" height="15" hTextAlign="Center">
+				<expression><![CDATA[$F{productTypeDsc}]]></expression>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="staticText" uuid="07a89cd8-db66-464b-85d7-b951045c9981" x="275" y="2" width="90" height="14" bold="true" hTextAlign="Left">
-				<text><![CDATA[TYPO MATERIAL]]></text>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-			</element>
-			<element kind="staticText" uuid="7b37d5b9-4f54-4836-bf3d-bdbd15bb7818" x="370" y="2" width="70" height="14" bold="true" hTextAlign="Left">
-				<text><![CDATA[QUANTIDADE]]></text>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-			</element>
-			<element kind="staticText" uuid="0fa4c903-e236-4d94-96c7-b19f18f89f7d" x="443" y="2" width="110" height="14" bold="true" hTextAlign="Left">
+			<element kind="staticText" uuid="5ed0b479-4be7-4093-b6d7-08a678eaae5c" x="441" y="0" width="112" height="15" bold="true" hTextAlign="Center">
 				<text><![CDATA[PREÇO UNITÁRIO]]></text>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="08ba5163-bcb6-40bd-a319-e86cb30d9064" x="0" y="17" width="90" height="14">
-				<expression><![CDATA[$F{baseProductId}]]></expression>
+			<element kind="staticText" uuid="7d26eac0-a4a1-4103-a496-637b18932cb0" x="91" y="0" width="181" height="16" bold="true" hTextAlign="Center">
+				<text><![CDATA[NOME MATERIAL]]></text>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 			</element>
-			<element kind="textField" uuid="eac9263d-797a-4489-baca-aa45fb5cec16" x="94" y="17" width="178" height="14">
-				<expression><![CDATA[$F{baseProductName}]]></expression>
-			</element>
-			<element kind="textField" uuid="1573cc1a-3096-422f-9edd-2091bbdc2fd6" x="275" y="17" width="90" height="14">
-				<expression><![CDATA[$F{productTypeDsc}]]></expression>
-			</element>
-			<element kind="textField" uuid="384f5937-10f0-4625-bbb8-7a44912b1e9a" x="370" y="17" width="70" height="14">
-				<expression><![CDATA[$F{quantity}]]></expression>
-			</element>
-			<element kind="textField" uuid="6d545d97-f77f-4d08-849e-203e6dd3d83d" x="443" y="17" width="110" height="14">
+			<element kind="textField" uuid="f22f1a35-286f-47b7-a0f0-38f610bf92c0" x="441" y="16" width="109" height="15" hTextAlign="Center">
 				<expression><![CDATA[$F{baseProductUnitPrice}]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineStyle="Solid" lineColor="#000000"/>
+				</box>
 			</element>
-			<element kind="textField" uuid="3813466a-be37-44b1-aa6c-55a33bd49c72" x="0" y="35" width="552" height="44">
+			<element kind="staticText" uuid="23f68940-018b-478a-b893-b824d07322af" x="371" y="0" width="70" height="16" bold="true" hTextAlign="Center">
+				<text><![CDATA[QUANTIDADE]]></text>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="09229bd5-65d3-41e7-842f-31a79195b9b0" x="0" y="31" width="550" height="47">
 				<expression><![CDATA[$F{baseProductDescription}]]></expression>
 			</element>
-			<element kind="staticText" uuid="fdd8e0bf-32ee-4c6a-b128-fa4d558d46fa" x="0" y="80" width="80" height="14" bold="true" hTextAlign="Left">
-				<text><![CDATA[SUB. TOTAL :]]></text>
+			<element kind="textField" uuid="3a989256-9dd4-48cb-abe6-d4b9c3eae753" mode="Opaque" x="82" y="78" width="471" height="16" backcolor="#B7B7B7" hTextAlign="Right">
+				<expression><![CDATA[$V{subtotal} + " "]]></expression>
+			</element>
+			<element kind="staticText" uuid="8dcc32df-9529-4c9d-8540-3badcebccfb0" x="273" y="0" width="97" height="16" bold="true" hTextAlign="Center">
+				<text><![CDATA[TYPO MATERIAL]]></text>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 			</element>
-			<element kind="textField" uuid="c36fba6b-626c-4683-9eb0-98499886aef2" x="80" y="80" width="473" height="14" hTextAlign="Right">
-				<expression><![CDATA[$V{subtotal}]]></expression>
+			<element kind="staticText" uuid="f81b48f4-1aac-49ef-a0ee-50989b2d4d6f" mode="Opaque" x="0" y="78" width="82" height="16" backcolor="#B7B7B7" bold="true" hTextAlign="Left">
+				<text><![CDATA[ SUB. TOTAL :]]></text>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="e61d6fcf-be55-45f7-b62d-d0f02e0efef1" x="91" y="16" width="181" height="15" hTextAlign="Center">
+				<expression><![CDATA[$F{baseProductName}]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="45e3d472-38a1-4713-8267-9d83d6b8eba5" x="0" y="0" width="90" height="15" bold="true" hTextAlign="Center">
+				<text><![CDATA[CÓD. MATERIAL]]></text>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="9a007ff5-8b83-4a65-a4ef-0b75b1612076" x="371" y="16" width="70" height="15" hTextAlign="Center">
+				<expression><![CDATA[$F{quantity}]]></expression>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineStyle="Solid" lineColor="#000000"/>
+				</box>
 			</element>
 		</band>
 	</detail>

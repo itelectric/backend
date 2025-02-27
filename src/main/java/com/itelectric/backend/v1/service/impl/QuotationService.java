@@ -4,6 +4,7 @@ import com.itelectric.backend.v1.domain.entity.BaseProduct;
 import com.itelectric.backend.v1.domain.entity.QuotationItem;
 import com.itelectric.backend.v1.domain.entity.QuotationOrder;
 import com.itelectric.backend.v1.domain.enums.Supplier;
+import com.itelectric.backend.v1.domain.exception.BusinessException;
 import com.itelectric.backend.v1.domain.exception.DuplicationException;
 import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import com.itelectric.backend.v1.domain.report.QuotationItemReport;
@@ -30,9 +31,9 @@ public class QuotationService implements IQuotationService {
     private final BaseProductRepository baseProductRepository;
 
     @Override
-    public void requestAQuotation(QuotationOrder quotationOrder) throws DuplicationException, NotFoundException {
+    public void requestAQuotation(QuotationOrder quotationOrder) throws DuplicationException, NotFoundException, BusinessException {
         this.checkIfAllItemsExists(new ArrayList<>(quotationOrder.getItems()));
-        this.checkDuplications(new ArrayList<>(quotationOrder.getItems()));
+        this.checkDuplicationsAndQuantity(new ArrayList<>(quotationOrder.getItems()));
         List<QuotationItem> items = new ArrayList<>(quotationOrder.getItems());
         quotationOrder.setItems(null);
         quotationOrder.setDeleted(false);
@@ -52,11 +53,13 @@ public class QuotationService implements IQuotationService {
     }
 
     @Override
-    public byte[] getQuotation(Integer quotationRequestId) throws NotFoundException, IOException {
+    public byte[] getQuotation(Integer quotationRequestId) throws Exception {
         final String reportName = "QuotationReport";
-        QuotationReport quotationReport = this.quotationOrderRepository.findQuotationReport(quotationRequestId);
-        if (Objects.isNull(quotationReport))
+        UUID userId = FuncUtils.getLoogedUser().getId();
+        Optional<QuotationReport> optionalQuotationReport = this.quotationOrderRepository.findQuotationReport(quotationRequestId, userId);
+        if (optionalQuotationReport.isEmpty())
             throw new NotFoundException("Could not find quotation with code: " + quotationRequestId);
+        QuotationReport quotationReport =  optionalQuotationReport.get();
         List<QuotationItemReport> quotationItems = this.quotationItemRepository.findItemsReportByQuotationId(quotationRequestId);
         if (quotationItems == null || quotationItems.isEmpty())
             throw new NotFoundException("There ways an error occurred " +
@@ -68,24 +71,26 @@ public class QuotationService implements IQuotationService {
         params.put("EMAIL", Supplier.EMAIL.getValue());
         params.put("CONTACT", Supplier.CONTACT.getValue());
         params.put("ADDRESS", Supplier.ADDRESS.getValue());
-        params.put("list", quotationReport.getItems());
+        params.put("orderItems", quotationReport.getItems());
         return Jasper.generatePDF(reportName, params, list);
     }
 
-    private void checkDuplications(List<QuotationItem> items) throws DuplicationException {
+    private void checkDuplicationsAndQuantity(List<QuotationItem> items) throws DuplicationException, BusinessException {
         Map<Integer, BaseProduct> productMap = new HashMap<>();
         for (QuotationItem item : items) {
             Integer productId = item.getBaseProduct().getId();
             if (productMap.containsKey(productId)) {
-                throw new DuplicationException("The item with the code " + productId
-                        + " and name " + item.getBaseProduct().getName() + " is duplicated!");
+                throw new DuplicationException("The item with the code " + productId + " is duplicated!");
+            }else if(Objects.equals(item.getQuantity(), 0)){
+                throw new BusinessException("The quantity of item with code " + productId
+                        +" must be at least one (1) for the quote to be generated.");
             }
             productMap.put(productId, item.getBaseProduct());
         }
     }
 
     private void checkIfAllItemsExists(List<QuotationItem> items) throws NotFoundException {
-        Optional<BaseProduct> baseProduct = Optional.empty();
+        Optional<BaseProduct> baseProduct;
         for (QuotationItem item : items) {
             Integer baseProductId = item.getBaseProduct().getId();
             baseProduct = this.baseProductRepository.findById(baseProductId);

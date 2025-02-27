@@ -15,7 +15,7 @@ import java.util.Objects;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({BusinessException.class, HandlerMethodValidationException.class})
+    @ExceptionHandler({BusinessException.class, HandlerMethodValidationException.class,DuplicationException.class})
     public ResponseEntity<Response> handleBusinessExceptions(Exception ex) {
         Response response = new Response(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.name(),
