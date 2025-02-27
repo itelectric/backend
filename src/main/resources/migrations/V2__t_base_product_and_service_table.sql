@@ -1,7 +1,7 @@
 -- Creating table product_service
-CREATE TABLE t_base_product
+CREATE TABLE t_base_products
 (
-    id                 UUID PRIMARY KEY,
+    id                 SERIAL PRIMARY KEY,
     name               VARCHAR(255)                                       NOT NULL,
     description        TEXT                                               NOT NULL,
     type               VARCHAR(10) CHECK (type IN ('PRODUCT', 'SERVICE')) NOT NULL,
@@ -11,19 +11,26 @@ CREATE TABLE t_base_product
     created_by         VARCHAR(50)                                        NOT NULL,
     created_date       TIMESTAMP                                          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified_by   VARCHAR(50),
-    last_modified_date TIMESTAMP                                                   DEFAULT CURRENT_TIMESTAMP
+    last_modified_date TIMESTAMP                                          DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE seq_base_product
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 -- Creating table product
-CREATE TABLE t_product
+CREATE TABLE t_products
 (
-    id             UUID PRIMARY KEY REFERENCES t_base_product (id) ON DELETE CASCADE,
+    id             BIGINT PRIMARY KEY REFERENCES t_base_products (id) ON DELETE CASCADE,
     stock_quantity INT
 );
 
 -- Creating table service
-CREATE TABLE t_service
+CREATE TABLE t_services
 (
-    id             UUID PRIMARY KEY REFERENCES t_base_product (id) ON DELETE CASCADE,
-    estimated_time INTERVAL NOT NULL
+    id              BIGINT PRIMARY KEY REFERENCES t_base_products (id) ON DELETE CASCADE,
+    estimated_time  BIGINT NOT NULL
 );

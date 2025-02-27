@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 @Tag(name = "Company", description = "Company operations"),
                 @Tag(name = "Customer", description = "Customer operations"),
                 @Tag(name = "Product", description = "Product operations"),
+                @Tag(name = "Quotation", description = "Quotation operations"),
                 @Tag(name = "Service", description = "Product operations")
         }
 )

@@ -39,10 +39,22 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/customers/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/companies/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_ADMIN.name()))
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/products/**")
+                        .hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_ADMIN.name()))
+
+                        .requestMatchers("/api/v1/quotations/**")
+                        .hasAnyRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_CUSTOMER.name())
+                                , FuncUtils.getRemoveRolePrefix(Roles.ROLE_COMPANY.name()))
+
                         .requestMatchers(HttpMethod.GET, "/api/v1/services/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/services/**").hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_ADMIN.name()))
-                        .requestMatchers(HttpMethod.POST, "/api/v1/admins/**").hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_SUPERUSER.name()))
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/services/**")
+                        .hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_ADMIN.name()))
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/admins/**")
+                        .hasRole(FuncUtils.getRemoveRolePrefix(Roles.ROLE_SUPERUSER.name()))
+
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));

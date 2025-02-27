@@ -7,7 +7,6 @@ import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.UUID;
 
 //CRUD
 public interface IProductService {
@@ -17,9 +16,9 @@ public interface IProductService {
 
     Page<Product> readAll(int pageNo, int pageSize);
 
-    Product readByID(UUID id) throws NotFoundException;
+    Product readByID(Integer id) throws NotFoundException;
 
     void update(Product product) throws ConflictException, NotFoundException;
 
-    void delete(UUID id) throws NotFoundException;
+    void delete(Integer id) throws NotFoundException;
 }

@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -72,7 +71,15 @@ public class ServiceManagerController {
     public ResponseEntity<Response> createMany(@RequestBody @NotEmpty List<@Valid CreateServiceRequest> request)
             throws ConflictException {
         List<ServiceManager> services = request.stream()
-                .map(req -> this.mapper.map(req, ServiceManager.class))
+                .map(req -> {
+                    ServiceManager service = this.mapper.map(req, ServiceManager.class);
+                    Duration estimatedTime = Duration.ofMinutes(0);
+                    if (!StringUtils.isEmpty(req.getEstimatedTime())) {
+                        estimatedTime = Duration.parse(req.getEstimatedTime());
+                    }
+                    service.setEstimatedTime(estimatedTime);
+                    return service;
+                })
                 .collect(Collectors.toList());
 
         this.service.createMany(services);
@@ -104,7 +111,7 @@ public class ServiceManagerController {
             @ApiResponse(responseCode = "404", description = "NOT_FOUND"),
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
-    public ResponseEntity<Response> readById(@PathVariable("id") UUID id) throws NotFoundException {
+    public ResponseEntity<Response> readById(@PathVariable("id") Integer id) throws NotFoundException {
         ServiceManager serviceManager = this.service.readByID(id);
         Response response = new Response(HttpStatus.OK.value(),
                 HttpStatus.OK.name(),
@@ -123,7 +130,7 @@ public class ServiceManagerController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<Response> update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateServiceRequest request)
+    public ResponseEntity<Response> update(@PathVariable("id") Integer id, @Valid @RequestBody UpdateServiceRequest request)
             throws ConflictException, NotFoundException {
         ServiceManager serviceManager = this.mapper.map(request, ServiceManager.class);
         serviceManager.setId(id);
@@ -143,7 +150,7 @@ public class ServiceManagerController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<Response> delete(@PathVariable("id") UUID id)
+    public ResponseEntity<Response> delete(@PathVariable("id") Integer id)
             throws NotFoundException {
         this.service.delete(id);
         Response response = new Response(HttpStatus.OK.value(),

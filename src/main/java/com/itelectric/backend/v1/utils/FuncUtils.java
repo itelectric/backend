@@ -1,16 +1,29 @@
 package com.itelectric.backend.v1.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itelectric.backend.v1.domain.entity.AbstractAuditingEntity;
+import com.itelectric.backend.v1.domain.entity.User;
 import com.itelectric.backend.v1.domain.enums.GeralEnuns;
 import com.itelectric.backend.v1.domain.exception.BusinessException;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.ForbiddenException;
 import com.itelectric.backend.v1.domain.exception.UnexpectedException;
+import com.itelectric.backend.v1.service.impl.AuditingService;
 import jakarta.ws.rs.core.Response;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
-public class FuncUtils {
+@Component
+public class FuncUtils implements ApplicationContextAware {
+    private static ApplicationContext context;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        context = applicationContext;
+    }
+
     public static void handlingKeycloakResponse(Response response) throws ConflictException, BusinessException, UnexpectedException, ForbiddenException {
         switch (response.getStatus()) {
             case 201: {
@@ -53,5 +66,25 @@ public class FuncUtils {
 
     public static String getRemoveRolePrefix(String role) {
         return role.substring(5); // ROLE_XTXTX
+    }
+
+    public static AbstractAuditingEntity setAuditFields(AbstractAuditingEntity entity) {
+        AuditingService auditingService = context.getBean(AuditingService.class);
+        String auditor = auditingService.getCurrentAuditor().get();
+        entity.setCreatedBy(auditor);
+        entity.setLastModifiedBy(auditor);
+        return entity;
+    }
+
+    public static AbstractAuditingEntity setLastModifiedBy(AbstractAuditingEntity entity) {
+        AuditingService auditingService = context.getBean(AuditingService.class);
+        String auditor = auditingService.getCurrentAuditor().get();
+        entity.setLastModifiedBy(auditor);
+        return entity;
+    }
+
+    public static User getLoogedUser() {
+        AuditingService auditingService = context.getBean(AuditingService.class);
+        return auditingService.getLoggedUser();
     }
 }

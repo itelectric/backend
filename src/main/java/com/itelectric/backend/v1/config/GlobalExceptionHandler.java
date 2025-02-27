@@ -1,10 +1,7 @@
 package com.itelectric.backend.v1.config;
 
 import com.itelectric.backend.v1.api.dto.Response;
-import com.itelectric.backend.v1.domain.exception.BusinessException;
-import com.itelectric.backend.v1.domain.exception.ConflictException;
-import com.itelectric.backend.v1.domain.exception.ForbiddenException;
-import com.itelectric.backend.v1.domain.exception.UnauthorizedException;
+import com.itelectric.backend.v1.domain.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,7 @@ import java.util.Objects;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({BusinessException.class, HandlerMethodValidationException.class})
+    @ExceptionHandler({BusinessException.class, HandlerMethodValidationException.class,DuplicationException.class})
     public ResponseEntity<Response> handleBusinessExceptions(Exception ex) {
         Response response = new Response(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.name(),
@@ -50,6 +47,14 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN.name(),
                 ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Response> handleNotFoundExceptions(Exception ex) {
+        Response response = new Response(HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.name(),
+                ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ConflictException.class)
