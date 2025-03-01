@@ -1,12 +1,15 @@
 package com.itelectric.backend.v1.api.controller;
 
-import com.itelectric.backend.v1.api.dto.CreateProductRequest;
-import com.itelectric.backend.v1.api.dto.Response;
-import com.itelectric.backend.v1.api.dto.UpdateProductRequest;
+import com.itelectric.backend.v1.api.dto.request.CreateProductRequest;
+import com.itelectric.backend.v1.api.dto.request.UpdateProductRequest;
+import com.itelectric.backend.v1.api.dto.response.BaseReadResponse;
+import com.itelectric.backend.v1.api.dto.response.ProductResponse;
+import com.itelectric.backend.v1.api.dto.response.Response;
 import com.itelectric.backend.v1.domain.entity.Product;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import com.itelectric.backend.v1.service.impl.ProductService;
+import com.itelectric.backend.v1.utils.FuncUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -46,9 +49,7 @@ public class ProductController {
     public ResponseEntity<Response> create(@Valid @RequestBody CreateProductRequest request) throws ConflictException {
         Product product = this.mapper.map(request, Product.class);
         this.service.create(product);
-        Response response = new Response(HttpStatus.CREATED.value(),
-                HttpStatus.CREATED.name(),
-                "Created.");
+        Response response = new Response(HttpStatus.CREATED.value(), HttpStatus.CREATED.name(), "Created.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -67,11 +68,8 @@ public class ProductController {
         List<Product> products = request.stream()
                 .map(req -> this.mapper.map(req, Product.class))
                 .collect(Collectors.toList());
-
         this.service.createMany(products);
-        Response response = new Response(HttpStatus.CREATED.value(),
-                HttpStatus.CREATED.name(),
-                "Created.");
+        Response response = new Response(HttpStatus.CREATED.value(), HttpStatus.CREATED.name(), "Created.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -84,9 +82,11 @@ public class ProductController {
     public ResponseEntity<Response> readAll(@RequestParam(defaultValue = "0") int pageNo,
                                             @RequestParam(defaultValue = "10") int pageSize) {
         Page<Product> list = this.service.readAll(pageNo, pageSize);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                list);
+        List<ProductResponse> productResponses = list.stream()
+                .map(product -> mapper.map(product, ProductResponse.class))
+                .collect(Collectors.toList());
+        BaseReadResponse baseResponse = FuncUtils.buildReadManyResponse(list, productResponses);
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), baseResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -99,9 +99,9 @@ public class ProductController {
     })
     public ResponseEntity<Response> readById(@PathVariable("id") Integer id) throws NotFoundException {
         Product product = this.service.readByID(id);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                product);
+        ProductResponse productResponse = mapper.map(product, ProductResponse.class);
+        BaseReadResponse readResponse = FuncUtils.buildReadOneResponse(productResponse);
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), readResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -121,9 +121,7 @@ public class ProductController {
         Product product = this.mapper.map(request, Product.class);
         product.setId(id);
         this.service.update(product);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                "OK.");
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), "OK.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -139,9 +137,7 @@ public class ProductController {
     public ResponseEntity<Response> delete(@PathVariable("id") Integer id)
             throws NotFoundException {
         this.service.delete(id);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                "OK.");
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), "OK.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

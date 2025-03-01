@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_quotation_orders")
-public class QuotationOrder extends AbstractAuditingEntity implements Serializable {
+public class Quotation extends AbstractAuditingEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -30,7 +30,7 @@ public class QuotationOrder extends AbstractAuditingEntity implements Serializab
     @JoinColumn(name = "fk_user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "quotationOrder", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "quotation", fetch = FetchType.LAZY)
     private Set<QuotationItem> items;
 
     @Column(name = "is_deleted")

@@ -1,4 +1,4 @@
-package com.itelectric.backend.v1.api.dto;
+package com.itelectric.backend.v1.api.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
@@ -7,12 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class UpdateServiceRequest {
+public class UpdateProductRequest {
     @Size(min = 6, message = "Name must have at least 6 characters.")
     private String name;
 
@@ -22,5 +21,5 @@ public class UpdateServiceRequest {
     @DecimalMin(value = "0.01", message = "Price must be greater than zero.")
     private BigDecimal price;
 
-    private Duration estimatedTime;
+    private int stockQuantity;
 }

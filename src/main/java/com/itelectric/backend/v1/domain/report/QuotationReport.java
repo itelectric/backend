@@ -29,7 +29,7 @@ public class QuotationReport {
     private Instant issueDate;
 
     public QuotationReport(String name, String nuit, String cellPhone, String email,
-                           String address,Integer quotationId,Instant issueDate) {
+                           String address, Integer quotationId, Instant issueDate) {
         this.name = name;
         this.nuit = nuit;
         this.cellPhone = cellPhone;

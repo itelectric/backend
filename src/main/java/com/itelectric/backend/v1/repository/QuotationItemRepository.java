@@ -15,7 +15,7 @@ public interface QuotationItemRepository extends JpaRepository<QuotationItem, In
             " bp.id,bp.name,bp.type,bp.price,bp.description,i.quantity) " +
             " FROM QuotationItem i " +
             " JOIN i.baseProduct bp " +
-            " JOIN i.quotationOrder qo " +
+            " JOIN i.quotation qo " +
             " WHERE qo.id = :quotationId")
     List<QuotationItemReport> findItemsReportByQuotationId(@Param("quotationId") Integer quotationId);
 

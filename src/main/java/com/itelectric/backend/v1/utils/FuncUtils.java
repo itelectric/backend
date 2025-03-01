@@ -1,7 +1,9 @@
 package com.itelectric.backend.v1.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itelectric.backend.v1.api.dto.response.BaseReadResponse;
 import com.itelectric.backend.v1.domain.entity.AbstractAuditingEntity;
+import com.itelectric.backend.v1.domain.entity.Address;
 import com.itelectric.backend.v1.domain.entity.User;
 import com.itelectric.backend.v1.domain.enums.GeralEnuns;
 import com.itelectric.backend.v1.domain.exception.BusinessException;
@@ -12,6 +14,7 @@ import com.itelectric.backend.v1.service.impl.AuditingService;
 import jakarta.ws.rs.core.Response;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
@@ -19,10 +22,6 @@ import java.util.Scanner;
 @Component
 public class FuncUtils implements ApplicationContextAware {
     private static ApplicationContext context;
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        context = applicationContext;
-    }
 
     public static void handlingKeycloakResponse(Response response) throws ConflictException, BusinessException, UnexpectedException, ForbiddenException {
         switch (response.getStatus()) {
@@ -86,5 +85,56 @@ public class FuncUtils implements ApplicationContextAware {
     public static User getLoogedUser() {
         AuditingService auditingService = context.getBean(AuditingService.class);
         return auditingService.getLoggedUser();
+    }
+
+    public static <T> BaseReadResponse buildReadManyResponse(Page<T> entity, Object content) {
+        return BaseReadResponse
+                .builder()
+                .numberOfElements(entity.getNumberOfElements())
+                .pageNumer(entity.getPageable().getPageNumber())
+                .pageSize(entity.getSize())
+                .totalPages(entity.getTotalPages())
+                .totalElements(entity.getTotalElements())
+                .content(content).
+                build();
+    }
+
+    public static BaseReadResponse buildReadOneResponse(Object content) {
+        return BaseReadResponse
+                .builder()
+                .numberOfElements(1)
+                .pageNumer(0)
+                .pageSize(1)
+                .totalPages(1)
+                .totalElements(1L)
+                .content(content).
+                build();
+    }
+
+    public static String getFormatedAddress(Address address) {
+        StringBuffer builder = new StringBuffer();
+        appendIfNotEmpty(builder, address.getStreet());
+        appendIfNotEmpty(builder, address.getNumber());
+        appendIfNotEmpty(builder, address.getCity());
+        appendIfNotEmpty(builder, address.getProvince());
+        appendIfNotEmpty(builder, address.getCountry());
+
+        if (address.getZipCode() != null && !address.getZipCode().isBlank()) {
+            if (builder.length() > 0) builder.append(" - ");
+            builder.append(address.getZipCode());
+        }
+        return builder.toString();
+    }
+
+    private static void appendIfNotEmpty(StringBuffer builder, String value) {
+        if (value != null && !value.isBlank()) {
+            if (builder.length() > 0) builder.append(", ");
+            builder.append(value);
+        }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        context = applicationContext;
     }
 }
