@@ -54,8 +54,8 @@ public class QuotationController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get Quotation Report")
-    @GetMapping(path = "/{quotationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Generate Quotation Report")
+    @GetMapping(path = "/generate-quotation-report/{quotationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "CREATED"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
@@ -63,8 +63,8 @@ public class QuotationController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<byte[]> getQuotation(@PathVariable("quotationId") Integer quotationId) throws Exception {
-        byte[] pdf = this.service.getQuotation(quotationId);
+    public ResponseEntity<byte[]> generateQuotationReport(@PathVariable("quotationId") Integer quotationId) throws Exception {
+        byte[] pdf = this.service.generateQuotationReport(quotationId);
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String filename = "QuotationReport-" + timestamp + ".pdf";
         HttpHeaders headers = new HttpHeaders();

@@ -16,6 +16,10 @@ public class QuotationItemResponse {
     private String baseProductName;
     private String baseProductType;
     private BigDecimal baseProductUnitPrice;
+    private BigDecimal totalPrice;
+    private BigDecimal totalPriceWithIVA;
+    private BigDecimal IVA;
+    private BigDecimal totalIVA;
     private String baseProductDescription;
     private int quantity;
 }

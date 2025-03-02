@@ -10,6 +10,7 @@ import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import com.itelectric.backend.v1.service.impl.ProductService;
 import com.itelectric.backend.v1.utils.FuncUtils;
+import com.itelectric.backend.v1.utils.Tax;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -82,9 +83,7 @@ public class ProductController {
     public ResponseEntity<Response> readAll(@RequestParam(defaultValue = "0") int pageNo,
                                             @RequestParam(defaultValue = "10") int pageSize) {
         Page<Product> list = this.service.readAll(pageNo, pageSize);
-        List<ProductResponse> productResponses = list.stream()
-                .map(product -> mapper.map(product, ProductResponse.class))
-                .collect(Collectors.toList());
+        List<ProductResponse> productResponses = Tax.calculateIVAAndMapToListProductEntity(list.getContent());
         BaseReadResponse baseResponse = FuncUtils.buildReadManyResponse(list, productResponses);
         Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), baseResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -99,7 +98,7 @@ public class ProductController {
     })
     public ResponseEntity<Response> readById(@PathVariable("id") Integer id) throws NotFoundException {
         Product product = this.service.readByID(id);
-        ProductResponse productResponse = mapper.map(product, ProductResponse.class);
+        ProductResponse productResponse = Tax.calculateIVAAndMapToProductEntity(product);
         BaseReadResponse readResponse = FuncUtils.buildReadOneResponse(productResponse);
         Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), readResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);

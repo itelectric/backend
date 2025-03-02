@@ -16,9 +16,7 @@ import java.util.UUID;
 public interface QuotationRepository extends JpaRepository<Quotation, Integer> {
     @Query("SELECT NEW com.itelectric.backend.v1.domain.report.QuotationReport( " +
             " user.name, user.nuit, contact.phone, contact.email, " +
-            " CONCAT(COALESCE(address.street, ''), ', ', COALESCE(address.number, ''), ', ', " +
-            " COALESCE(address.city, ''), ', ', COALESCE(address.zipCode, ''), ', ', " +
-            " COALESCE(address.province, ''), ', ', COALESCE(address.country, '')),qo.id,qo.createdDate) " +
+            " address,qo.id,qo.createdDate) " +
             " FROM Quotation qo " +
             " JOIN qo.user user " +
             " JOIN user.contact contact " +

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -23,4 +24,7 @@ public class QuotationResponse {
     //Quotation data
     private Integer quotationId;
     private Instant issueDate;
+    private BigDecimal totalPrice;
+    private BigDecimal totalPriceWithIVA;
+    private BigDecimal totalIVA;
 }

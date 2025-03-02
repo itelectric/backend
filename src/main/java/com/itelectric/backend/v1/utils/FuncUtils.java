@@ -5,7 +5,7 @@ import com.itelectric.backend.v1.api.dto.response.BaseReadResponse;
 import com.itelectric.backend.v1.domain.entity.AbstractAuditingEntity;
 import com.itelectric.backend.v1.domain.entity.Address;
 import com.itelectric.backend.v1.domain.entity.User;
-import com.itelectric.backend.v1.domain.enums.GeralEnuns;
+import com.itelectric.backend.v1.domain.enums.GeralStringEnuns;
 import com.itelectric.backend.v1.domain.exception.BusinessException;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.ForbiddenException;
@@ -49,14 +49,14 @@ public class FuncUtils implements ApplicationContextAware {
                 return scanner.hasNext() ? scanner.next() : "";
             }
         }
-        return GeralEnuns.NO_MESSAGE_PROVIDED.name();
+        return GeralStringEnuns.NO_MESSAGE_PROVIDED.name();
     }
 
     private static String getKeycloakErrorMapErrorMessage(Response response) throws UnexpectedException {
         try {
             String json = getKeycloakResponseMessage(response);
-            if (json == null || json.isBlank() || GeralEnuns.NO_MESSAGE_PROVIDED.name().equals(json))
-                return GeralEnuns.NO_MESSAGE_PROVIDED.name();
+            if (json == null || json.isBlank() || GeralStringEnuns.NO_MESSAGE_PROVIDED.name().equals(json))
+                return GeralStringEnuns.NO_MESSAGE_PROVIDED.name();
             return new ObjectMapper().readTree(json).path("errorMessage").asText("");
         } catch (Exception ex) {
             throw new UnexpectedException("Failed to parse Keycloak error message: " + ex.getMessage());

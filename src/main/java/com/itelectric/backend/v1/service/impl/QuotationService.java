@@ -15,6 +15,7 @@ import com.itelectric.backend.v1.repository.QuotationRepository;
 import com.itelectric.backend.v1.service.contract.IQuotationService;
 import com.itelectric.backend.v1.utils.FuncUtils;
 import com.itelectric.backend.v1.utils.Jasper;
+import com.itelectric.backend.v1.utils.Tax;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,7 +56,7 @@ public class QuotationService implements IQuotationService {
     }
 
     @Override
-    public byte[] getQuotation(Integer quotationRequestId) throws Exception {
+    public byte[] generateQuotationReport(Integer quotationRequestId) throws Exception {
         final String reportName = "QuotationReport";
         UUID userId = FuncUtils.getLoogedUser().getId();
         Optional<QuotationReport> optionalQuotationReport = this.quotationRepository.findQuotationReport(quotationRequestId, userId);
@@ -67,6 +68,7 @@ public class QuotationService implements IQuotationService {
             throw new NotFoundException("There ways an error occurred " +
                     "while finding quotation items for Quotation with code: " + quotationRequestId);
         quotationReport.setItems(quotationItems);
+        quotationReport = Tax.calculateIVAAndMapToQuotationReport(quotationReport);
         List<QuotationReport> list = new ArrayList<>(List.of(quotationReport));
         Map<String, Object> params = new HashMap<>();
         params.put("NUIT", Supplier.NUIT.getValue());

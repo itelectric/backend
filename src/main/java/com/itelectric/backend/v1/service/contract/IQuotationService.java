@@ -8,5 +8,5 @@ import com.itelectric.backend.v1.domain.exception.NotFoundException;
 public interface IQuotationService {
     void requestQuotation(Quotation quotation) throws DuplicationException, NotFoundException, BusinessException;
 
-    byte[] getQuotation(Integer quotationRequestId) throws Exception;
+    byte[] generateQuotationReport(Integer quotationRequestId) throws Exception;
 }
