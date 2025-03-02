@@ -1,7 +1,7 @@
 package com.itelectric.backend.v1.api.controller;
 
-import com.itelectric.backend.v1.api.dto.request.CreateCompanyRequest;
-import com.itelectric.backend.v1.api.dto.response.Response;
+import com.itelectric.backend.v1.api.dto.CreateCompanyRequest;
+import com.itelectric.backend.v1.api.dto.Response;
 import com.itelectric.backend.v1.domain.entity.User;
 import com.itelectric.backend.v1.domain.exception.BusinessException;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
@@ -41,7 +41,9 @@ public class CompanyController {
     public ResponseEntity<Response> create(@Valid @RequestBody CreateCompanyRequest request) throws ConflictException, BusinessException, UnexpectedException, ForbiddenException {
         User user = this.mapper.map(request, User.class);
         this.service.create(user);
-        Response response = new Response(HttpStatus.CREATED.value(), HttpStatus.CREATED.name(), "Created.");
+        Response response = new Response(HttpStatus.CREATED.value(),
+                HttpStatus.CREATED.name(),
+                "Created.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

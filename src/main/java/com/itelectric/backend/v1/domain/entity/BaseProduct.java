@@ -36,9 +36,6 @@ public class BaseProduct extends AbstractAuditingEntity implements Serializable 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "has_iva", nullable = false)
-    private boolean hasIVA;
-
     @Column(nullable = false)
     private boolean available;
 

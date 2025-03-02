@@ -1,7 +1,7 @@
 package com.itelectric.backend.v1.api.controller;
 
-import com.itelectric.backend.v1.api.dto.request.LoginRequest;
-import com.itelectric.backend.v1.api.dto.response.Response;
+import com.itelectric.backend.v1.api.dto.LoginRequest;
+import com.itelectric.backend.v1.api.dto.Response;
 import com.itelectric.backend.v1.domain.exception.UnauthorizedException;
 import com.itelectric.backend.v1.service.impl.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +35,9 @@ public class AuthController {
     })
     public ResponseEntity<Response> login(@Valid @RequestBody LoginRequest request) throws UnauthorizedException {
         String token = this.service.login(request.getUsername(), request.getPassword());
-        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), token);
+        Response response = new Response(HttpStatus.OK.value(),
+                HttpStatus.OK.name(),
+                token);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

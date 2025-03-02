@@ -1,5 +1,6 @@
-package com.itelectric.backend.v1.api.dto.request;
+package com.itelectric.backend.v1.api.dto;
 
+import com.itelectric.backend.v1.service.impl.QuotationItemRequest;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
