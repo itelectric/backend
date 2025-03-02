@@ -29,7 +29,7 @@ public class QuotationItem extends AbstractAuditingEntity implements Serializabl
 
     @ManyToOne
     @JoinColumn(name = "fk_quotation_order_id", nullable = false)
-    private Quotation quotation;
+    private QuotationOrder quotationOrder;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;

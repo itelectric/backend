@@ -1,4 +1,4 @@
-package com.itelectric.backend.v1.api.dto.request;
+package com.itelectric.backend.v1.api.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

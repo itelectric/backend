@@ -1,4 +1,4 @@
-package com.itelectric.backend.v1.api.dto.response;
+package com.itelectric.backend.v1.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
