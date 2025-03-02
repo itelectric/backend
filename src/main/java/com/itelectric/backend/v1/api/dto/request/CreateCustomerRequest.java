@@ -1,4 +1,4 @@
-package com.itelectric.backend.v1.api.dto;
+package com.itelectric.backend.v1.api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class CreateCompanyRequest {
+public class CreateCustomerRequest {
     @NotNull(message = "Name is required.")
     @NotBlank(message = "Name is required.")
     @Size(min = 6, message = "Name must have at least 6 characters.")

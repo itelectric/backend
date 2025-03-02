@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface QuotationItemRepository extends JpaRepository<QuotationItem, Integer> {
     @Query("SELECT NEW com.itelectric.backend.v1.domain.report.QuotationItemReport(" +
-            " bp.id,bp.name,bp.type,bp.price,bp.description,i.quantity) " +
+            " bp.id,bp.name,bp.type,bp.price,bp.description,bp.hasIVA,i.quantity) " +
             " FROM QuotationItem i " +
             " JOIN i.baseProduct bp " +
-            " JOIN i.quotationOrder qo " +
+            " JOIN i.quotation qo " +
             " WHERE qo.id = :quotationId")
     List<QuotationItemReport> findItemsReportByQuotationId(@Param("quotationId") Integer quotationId);
 

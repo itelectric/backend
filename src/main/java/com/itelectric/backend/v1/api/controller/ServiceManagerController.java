@@ -1,12 +1,15 @@
 package com.itelectric.backend.v1.api.controller;
 
-import com.itelectric.backend.v1.api.dto.CreateServiceRequest;
-import com.itelectric.backend.v1.api.dto.Response;
-import com.itelectric.backend.v1.api.dto.UpdateServiceRequest;
+import com.itelectric.backend.v1.api.dto.request.CreateServiceRequest;
+import com.itelectric.backend.v1.api.dto.request.UpdateServiceRequest;
+import com.itelectric.backend.v1.api.dto.response.BaseReadResponse;
+import com.itelectric.backend.v1.api.dto.response.Response;
+import com.itelectric.backend.v1.api.dto.response.ServiceManagerResponse;
 import com.itelectric.backend.v1.domain.entity.ServiceManager;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import com.itelectric.backend.v1.service.impl.ServiceManagerService;
+import com.itelectric.backend.v1.utils.FuncUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -52,9 +55,7 @@ public class ServiceManagerController {
             estimatedTime = Duration.parse(request.getEstimatedTime());
         serviceManager.setEstimatedTime(estimatedTime);
         this.service.create(serviceManager);
-        Response response = new Response(HttpStatus.CREATED.value(),
-                HttpStatus.CREATED.name(),
-                "Created.");
+        Response response = new Response(HttpStatus.CREATED.value(), HttpStatus.CREATED.name(), "Created.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -83,9 +84,7 @@ public class ServiceManagerController {
                 .collect(Collectors.toList());
 
         this.service.createMany(services);
-        Response response = new Response(HttpStatus.CREATED.value(),
-                HttpStatus.CREATED.name(),
-                "Created.");
+        Response response = new Response(HttpStatus.CREATED.value(), HttpStatus.CREATED.name(), "Created.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -98,9 +97,10 @@ public class ServiceManagerController {
     public ResponseEntity<Response> readAll(@RequestParam(defaultValue = "0") int pageNo,
                                             @RequestParam(defaultValue = "10") int pageSize) {
         Page<ServiceManager> list = this.service.readAll(pageNo, pageSize);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                list);
+        List<ServiceManagerResponse> serviceManagerResponses = list.stream()
+                .map(serviceManager -> mapper.map(serviceManager, ServiceManagerResponse.class))
+                .collect(Collectors.toList());
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), serviceManagerResponses);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -113,9 +113,9 @@ public class ServiceManagerController {
     })
     public ResponseEntity<Response> readById(@PathVariable("id") Integer id) throws NotFoundException {
         ServiceManager serviceManager = this.service.readByID(id);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                serviceManager);
+        ServiceManagerResponse serviceManagerResponse = mapper.map(serviceManager, ServiceManagerResponse.class);
+        BaseReadResponse readResponse = FuncUtils.buildReadOneResponse(serviceManagerResponse);
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), readResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -135,9 +135,7 @@ public class ServiceManagerController {
         ServiceManager serviceManager = this.mapper.map(request, ServiceManager.class);
         serviceManager.setId(id);
         this.service.update(serviceManager);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                "OK.");
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), "OK.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -150,12 +148,9 @@ public class ServiceManagerController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<Response> delete(@PathVariable("id") Integer id)
-            throws NotFoundException {
+    public ResponseEntity<Response> delete(@PathVariable("id") Integer id) throws NotFoundException {
         this.service.delete(id);
-        Response response = new Response(HttpStatus.OK.value(),
-                HttpStatus.OK.name(),
-                "OK.");
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), "OK.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
