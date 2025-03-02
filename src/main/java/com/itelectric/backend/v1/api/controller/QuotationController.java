@@ -1,15 +1,17 @@
 package com.itelectric.backend.v1.api.controller;
 
-import com.itelectric.backend.v1.api.dto.OrderQuotationRequest;
-import com.itelectric.backend.v1.api.dto.Response;
-import com.itelectric.backend.v1.domain.entity.BaseProduct;
-import com.itelectric.backend.v1.domain.entity.QuotationItem;
-import com.itelectric.backend.v1.domain.entity.QuotationOrder;
+import com.itelectric.backend.v1.api.dto.request.OrderQuotationRequest;
+import com.itelectric.backend.v1.api.dto.response.BaseReadResponse;
+import com.itelectric.backend.v1.api.dto.response.QuotationResponse;
+import com.itelectric.backend.v1.api.dto.response.Response;
+import com.itelectric.backend.v1.api.mapper.QuotationMapper;
+import com.itelectric.backend.v1.domain.entity.Quotation;
 import com.itelectric.backend.v1.domain.exception.BusinessException;
 import com.itelectric.backend.v1.domain.exception.ConflictException;
 import com.itelectric.backend.v1.domain.exception.DuplicationException;
 import com.itelectric.backend.v1.domain.exception.NotFoundException;
 import com.itelectric.backend.v1.service.impl.QuotationService;
+import com.itelectric.backend.v1.utils.FuncUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,22 +20,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "Quotation")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/quotations")
-public class QuotationOrderController {
+public class QuotationController {
     private final QuotationService service;
     private final ModelMapper mapper;
 
@@ -49,25 +48,14 @@ public class QuotationOrderController {
     @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Response> create(@Valid @RequestBody OrderQuotationRequest request)
             throws ConflictException, DuplicationException, NotFoundException, BusinessException {
-        QuotationOrder quotationOrder = this.mapper.map(request, QuotationOrder.class);
-        List<QuotationItem> items = new ArrayList<>();
-        items
-                .addAll(request.getItems().stream()
-                        .map(itemRequest -> QuotationItem.builder()
-                                .quantity(itemRequest.getQuantity())
-                                .baseProduct(BaseProduct.builder().id(itemRequest.getProductId()).build())
-                                .build())
-                        .collect(Collectors.toList()));
-        quotationOrder.setItems(new HashSet<>(items));
-        this.service.requestAQuotation(quotationOrder);
-        Response response = new Response(HttpStatus.CREATED.value(),
-                HttpStatus.CREATED.name(),
-                "Created.");
+        Quotation quotation = QuotationMapper.mapToQuotationEntity(request);
+        this.service.requestQuotation(quotation);
+        Response response = new Response(HttpStatus.CREATED.value(), HttpStatus.CREATED.name(), "Created.");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get Quotation Report")
-    @GetMapping(path = "/{quotationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Generate Quotation Report")
+    @GetMapping(path = "/generate-quotation-report/{quotationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "CREATED"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
@@ -75,8 +63,8 @@ public class QuotationOrderController {
             @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
     })
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<byte[]> getQuotation(@PathVariable("quotationId") Integer quotationId) throws Exception {
-        byte[] pdf = this.service.getQuotation(quotationId);
+    public ResponseEntity<byte[]> generateQuotationReport(@PathVariable("quotationId") Integer quotationId) throws Exception {
+        byte[] pdf = this.service.generateQuotationReport(quotationId);
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String filename = "QuotationReport-" + timestamp + ".pdf";
         HttpHeaders headers = new HttpHeaders();
@@ -86,5 +74,22 @@ public class QuotationOrderController {
         headers.add(HttpHeaders.PRAGMA, "no-cache");
         headers.add(HttpHeaders.EXPIRES, "0");
         return ResponseEntity.ok().headers(headers).body(pdf);
+    }
+
+    @Operation(summary = "List all Quotations")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "CREATED"),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
+            @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR")
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<Response> readAll(@RequestParam(defaultValue = "0") int pageNo,
+                                            @RequestParam(defaultValue = "10") int pageSize) throws Exception {
+        Page<Quotation> list = this.service.readAll(pageNo, pageSize);
+        List<QuotationResponse> quotationResponses = QuotationMapper.mapToListQuotationResponse(list.getContent());
+        BaseReadResponse baseResponse = FuncUtils.buildReadManyResponse(list, quotationResponses);
+        Response response = new Response(HttpStatus.OK.value(), HttpStatus.OK.name(), baseResponse);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

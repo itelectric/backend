@@ -1,4 +1,4 @@
-package com.itelectric.backend.v1.api.dto;
+package com.itelectric.backend.v1.api.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

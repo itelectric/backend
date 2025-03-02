@@ -1,6 +1,6 @@
 package com.itelectric.backend.v1.config;
 
-import com.itelectric.backend.v1.api.dto.Response;
+import com.itelectric.backend.v1.api.dto.response.Response;
 import com.itelectric.backend.v1.domain.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import java.util.Objects;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({BusinessException.class, HandlerMethodValidationException.class,DuplicationException.class})
+    @ExceptionHandler({BusinessException.class, HandlerMethodValidationException.class, DuplicationException.class})
     public ResponseEntity<Response> handleBusinessExceptions(Exception ex) {
         Response response = new Response(HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.name(),
