@@ -55,7 +55,7 @@ public class QuotationController {
     }
 
     @Operation(summary = "Generate Quotation Report")
-    @GetMapping(path = "/generate-quotation-report/{quotationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/generate/report/{quotationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "CREATED"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
